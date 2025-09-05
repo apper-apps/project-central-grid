@@ -1,8 +1,14 @@
-import chatMessagesData from '@/services/mockData/chatMessages.json';
+// Initialize ApperClient for database operations
+const { ApperClient } = window.ApperSDK;
 
 class ChatService {
 constructor() {
-    this.messages = [...chatMessagesData];
+// Initialize ApperClient with Project ID and Public Key
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    });
+    this.tableName = 'chat_message_c';
     this.reactions = [];
     this.threads = [];
     this.channels = [
