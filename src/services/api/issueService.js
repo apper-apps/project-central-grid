@@ -650,18 +650,6 @@ export const statusWorkflow = ['To Do', 'In Progress', 'In Review', 'Done'];
 // Environment options
 export const environments = ['Production', 'Staging', 'Development'];
 
-export default {
-  getAll,
-  getById,
-  create,
-  update,
-  remove,
-  searchIssues,
-  getCommentsByIssueId,
-  createComment,
-  updateComment,
-  deleteComment
-};
 
 export {
   create,
