@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
-import ApperIcon from "@/components/ApperIcon";
-import Input from "@/components/atoms/Input";
-import Button from "@/components/atoms/Button";
-import Modal from "@/components/atoms/Modal";
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
+import { AuthContext } from '../../App'
+import ApperIcon from '@/components/ApperIcon'
+import Input from '@/components/atoms/Input'
+import Button from '@/components/atoms/Button'
+import Modal from '@/components/atoms/Modal'
 
 const Header = ({ onMenuClick, sidebarCollapsed, onToggleCollapse }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,7 +14,7 @@ const Header = ({ onMenuClick, sidebarCollapsed, onToggleCollapse }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [unreadNotifications, setUnreadNotifications] = useState(3);
-  const [notifications, setNotifications] = useState([
+const [notifications, setNotifications] = useState([
     { Id: 1, title: "New task assigned", message: "John assigned you 'Update API documentation'", time: "2 min ago", read: false },
     { Id: 2, title: "Project milestone reached", message: "Website Redesign project reached 75% completion", time: "1 hour ago", read: false },
     { Id: 3, title: "Comment on issue", message: "Sarah commented on 'Login bug fix'", time: "3 hours ago", read: false },
@@ -98,9 +99,15 @@ const Header = ({ onMenuClick, sidebarCollapsed, onToggleCollapse }) => {
     setShowProfileModal(false);
   };
 
-  const handleLogout = () => {
+const handleLogout = async () => {
     setShowProfileMenu(false);
-    toast.info("Logging out...");
+    try {
+      const { logout } = useContext(AuthContext);
+      await logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast.error("Logout failed");
+    }
   };
 
   return (
