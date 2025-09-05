@@ -1,8 +1,14 @@
-import projectsData from "@/services/mockData/projects.json";
+// Import ApperClient from SDK for database operations
+const { ApperClient } = window.ApperSDK;
 
 class ProjectService {
   constructor() {
-    this.projects = [...projectsData];
+    // Initialize ApperClient with Project ID and Public Key
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    });
+    this.tableName = 'project_c';
   }
 
   async getAll() {
@@ -334,6 +340,7 @@ async updateMilestone(milestoneId, milestoneData) {
     throw new Error("Calendar event not found");
   }
 
+// Utility method for delays (kept for compatibility)
   delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
