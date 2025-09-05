@@ -1,10 +1,42 @@
-import commentsData from "@/services/mockData/comments.json";
-import activityService from "./activityService.js";
-// Note: React import removed as not needed in service file
-// teamMemberService import removed as not used in this service
-// Removed improper React component import - services should use native Error objects
+import { toast } from "react-toastify";
+import activityService from "@/services/api/activityService";
 
-let comments = [...commentsData];
+// Mock comments data for development/testing
+let comments = [
+  {
+    Id: 1,
+    taskId: 1,
+    authorId: 1,
+    content: "This looks good to me!",
+    createdAt: "2024-01-15T10:30:00Z",
+    updatedAt: "2024-01-15T10:30:00Z",
+    parentId: null,
+    mentions: [],
+    isEdited: false
+  },
+  {
+    Id: 2,
+    taskId: 1,
+    authorId: 2,
+    content: "I agree with @john.doe, great work!",
+    createdAt: "2024-01-15T11:00:00Z",
+    updatedAt: "2024-01-15T11:00:00Z",
+    parentId: 1,
+    mentions: [1],
+    isEdited: false
+  },
+  {
+    Id: 3,
+    taskId: 2,
+    authorId: 3,
+    content: "Can we discuss this approach?",
+    createdAt: "2024-01-16T09:15:00Z",
+    updatedAt: "2024-01-16T09:15:00Z",
+    parentId: null,
+    mentions: [],
+    isEdited: false
+  }
+];
 
 const commentService = {
   // Get all comments for a specific task or project

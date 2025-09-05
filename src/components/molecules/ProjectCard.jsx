@@ -29,7 +29,7 @@ switch (status) {
           <div className="flex items-center gap-2 mb-2">
             <h3 
               className="font-semibold text-gray-900 hover:text-blue-600 cursor-pointer transition-colors truncate"
-              onClick={() => navigate(`/projects/${project.Id}`)}
+onClick={() => navigate(`/projects/${project.Id}`)}
             >
               {project.name}
             </h3>
@@ -63,7 +63,7 @@ switch (status) {
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs text-gray-500">Milestones</span>
                 <span className="text-xs font-medium text-gray-700">
-                  {project.milestones.filter(m => m.isCompleted).length}/{project.milestones.length}
+{project.milestones?.filter(m => m.is_completed_c).length || 0}/{project.milestones?.length || 0}
                 </span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-1.5">
@@ -71,8 +71,8 @@ switch (status) {
 className="h-1.5 rounded-full transition-all duration-300"
                   style={{
                     backgroundColor: '#4A90E2',
-                    width: `${project.milestones.length > 0 ? 
-                      Math.round((project.milestones.filter(m => m.isCompleted).length / project.milestones.length) * 100) 
+                    width: `${project.milestones?.length > 0 ? 
+                      Math.round((project.milestones.filter(m => m.is_completed_c).length / project.milestones.length) * 100) 
                       : 0}%` 
                   }}
                 ></div>
@@ -100,7 +100,7 @@ className="h-1.5 rounded-full transition-all duration-300"
 size="sm"
             onClick={(e) => {
               e.stopPropagation();
-              onDelete(project.Id);
+onDelete(project.Id);
             }}
             className="p-2 hover:text-red-600"
           >

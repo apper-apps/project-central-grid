@@ -50,7 +50,7 @@ const getProjectColor = (status) => {
             <div className="flex items-center space-x-2">
               <ApperIcon name="Clock" size={16} className="text-blue-600" />
               <span className="text-lg font-semibold text-blue-600">
-                {formatDuration(timeEntry.duration)}
+{formatDuration(timeEntry.duration_c || timeEntry.duration)}
               </span>
             </div>
             <div className="flex items-center space-x-2">
@@ -64,20 +64,20 @@ const getProjectColor = (status) => {
           {project && (
 <div className="flex items-center space-x-2 mb-3">
               <ApperIcon name="Briefcase" size={14} className="text-gray-500" />
-              <span className="font-medium text-gray-900">{project.name}</span>
-              <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getProjectColor(project.status)}`}>
-                {project.status}
+              <span className="font-medium text-gray-900">{project?.Name || project?.name}</span>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getProjectColor(project?.status_c || project?.status)}`}>
+                {project?.status_c || project?.status}
               </span>
             </div>
           )}
 
-          <p className="text-gray-700 text-sm leading-relaxed mb-4">
-            {timeEntry.description}
+<p className="text-gray-700 text-sm leading-relaxed mb-4">
+            {timeEntry.description_c || timeEntry.description}
           </p>
 
           <div className="flex items-center text-xs text-gray-500">
-            <ApperIcon name="Plus" size={12} className="mr-1" />
-            Created {new Date(timeEntry.createdAt).toLocaleDateString()}
+<ApperIcon name="Plus" size={12} className="mr-1" />
+            Created {new Date(timeEntry.created_at_c || timeEntry.createdAt).toLocaleDateString()}
           </div>
         </div>
 

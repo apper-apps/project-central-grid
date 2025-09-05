@@ -38,19 +38,19 @@ const [loading, setLoading] = useState(true);
       ]);
       
       // Calculate metrics
-      const activeClients = clients.filter(client => client.status === "Active").length;
+const activeClients = clients.filter(client => (client.status_c || client.status) === "Active").length;
       const activeProjects = projects.filter(project => 
-        project.status === "In Progress" || project.status === "Planning"
+        (project.status_c || project.status) === "In Progress" || (project.status_c || project.status) === "Planning"
       ).length;
       
       const today = new Date().toISOString().split('T')[0];
       const tasksDueToday = tasks.filter(task => 
-        !task.completed && task.dueDate === today
+        !(task.completed_c || task.completed) && (task.due_date_c || task.dueDate) === today
       ).length;
       
       const overdueTasks = tasks.filter(task => {
-        if (task.completed || !task.dueDate) return false;
-        return new Date(task.dueDate) < new Date(today);
+        if ((task.completed_c || task.completed) || !(task.due_date_c || task.dueDate)) return false;
+        return new Date(task.due_date_c || task.dueDate) < new Date(today);
       }).length;
       
       setStats({

@@ -17,11 +17,11 @@ const TimeEntryForm = ({ timeEntry, projects, onSubmit, onCancel }) => {
 useEffect(() => {
     if (timeEntry) {
       setFormData({
-        projectId: timeEntry.projectId || "",
-        description: timeEntry.description || "",
-        date: timeEntry.date || "",
-        duration: timeEntry.duration?.toString() || "",
-        taskId: timeEntry.taskId || ""
+projectId: timeEntry.project_id_c || timeEntry.projectId || "",
+        description: timeEntry.description_c || timeEntry.description || "",
+        date: timeEntry.date_c || timeEntry.date || "",
+        duration: (timeEntry.duration_c || timeEntry.duration)?.toString() || "",
+        taskId: timeEntry.task_id_c || timeEntry.taskId || ""
       });
     } else {
       const today = new Date().toISOString().split('T')[0];
@@ -68,8 +68,8 @@ useEffect(() => {
     if (validateForm()) {
       onSubmit({
         ...formData,
-        projectId: parseInt(formData.projectId),
-        duration: parseFloat(formData.duration)
+project_id_c: parseInt(formData.projectId),
+        duration_c: parseFloat(formData.duration)
       });
     }
   };
@@ -151,8 +151,8 @@ useEffect(() => {
         >
           <option value="">Select a project</option>
           {projects.map((project) => (
-            <option key={project.Id} value={project.Id}>
-              {project.name}
+<option key={project.Id} value={project.Id}>
+              {project.Name || project.name}
             </option>
           ))}
         </select>
