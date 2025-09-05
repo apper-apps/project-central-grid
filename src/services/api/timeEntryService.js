@@ -1,5 +1,5 @@
 import timeEntriesData from "@/services/mockData/timeEntries.json";
-import teamMembersData from "@/services/mockData/teamMembers.json";
+// Team member data is fetched from database using ApperClient when needed
 
 class TimeEntryService {
   constructor() {
