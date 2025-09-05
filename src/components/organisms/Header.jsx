@@ -14,6 +14,7 @@ const Header = ({ onMenuClick, sidebarCollapsed, onToggleCollapse }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [unreadNotifications, setUnreadNotifications] = useState(3);
+  const authContext = useContext(AuthContext);
 const [notifications, setNotifications] = useState([
     { Id: 1, title: "New task assigned", message: "John assigned you 'Update API documentation'", time: "2 min ago", read: false },
     { Id: 2, title: "Project milestone reached", message: "Website Redesign project reached 75% completion", time: "1 hour ago", read: false },
@@ -102,7 +103,7 @@ const [notifications, setNotifications] = useState([
 const handleLogout = async () => {
     setShowProfileMenu(false);
     try {
-      const { logout } = useContext(AuthContext);
+      const { logout } = authContext;
       await logout();
     } catch (error) {
       console.error("Logout failed:", error);
