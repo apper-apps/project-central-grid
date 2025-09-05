@@ -616,9 +616,8 @@ class TimeEntryService {
         console.error(error);
       }
       return [];
-    }
 }
-  }
+}
 }
 
 export default new TimeEntryService();
