@@ -35,9 +35,9 @@ const [showThread, setShowThread] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  const currentUserId = 1; // In a real app, this would come from auth context
+const currentUserId = 1; // In a real app, this would come from auth context
 
-  useEffect(() => {
+useEffect(() => {
     loadChatData();
   }, [projectId, channelType]);
 
@@ -118,7 +118,7 @@ try {
       const messageData = {
         content: newMessage.trim(),
         authorId: currentUserId,
-        projectId: projectId,
+projectId: projectId,
         channelType: channelType
       };
 
@@ -163,7 +163,7 @@ const handleOpenThread = async (message) => {
     try {
       const messageData = {
         content: newMessage,
-        authorId: 1, // In real app, get from auth
+authorId: 1, // In real app, get from auth
         projectId: projectId,
         channelType: channelType,
         parentId: selectedMessage.Id
@@ -180,7 +180,7 @@ const handleOpenThread = async (message) => {
 
   const handleAddReaction = async (messageId, emoji) => {
     try {
-      await chatService.addReaction(messageId, emoji, 1); // In real app, get userId from auth
+await chatService.addReaction(messageId, emoji, 1); // In real app, get userId from auth
       await loadChatData(); // Refresh to show reactions
       setShowEmojiPicker(null);
     } catch (error) {
