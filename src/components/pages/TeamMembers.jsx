@@ -263,15 +263,15 @@ const departments = [...new Set(members.map(member => member.department))];
             />
           </div>
           <div className="flex space-x-4">
-            <select
+<select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="All">All Status</option>
-              <option value="Active">Active</option>
-              <option value="Away">Away</option>
-              <option value="Inactive">Inactive</option>
+              <option key="all" value="All">All Status</option>
+              <option key="active" value="Active">Active</option>
+              <option key="away" value="Away">Away</option>
+              <option key="inactive" value="Inactive">Inactive</option>
             </select>
             <select
               value={departmentFilter}
