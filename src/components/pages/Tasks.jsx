@@ -38,7 +38,7 @@ const loadData = async () => {
           taskService.getAll(),
           projectService.getAll()
         ]);
-        const projectTasks = tasksData.filter(task => task.projectId === project.Id);
+const projectTasks = tasksData.filter(task => task.projectId === project.Id || (task.project && task.project.Id === project.Id));
         setTasks(projectTasks);
         setProjects(projectsData);
       } else {
@@ -148,10 +148,9 @@ const filteredTasks = tasks.filter(task => {
       (filter === "pending" && !task.completed);
     
     const matchesSearch = !searchTerm || 
-      task.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+(task.name || task.Name || task.title || '')?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       task.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       getProjectById(task.projectId)?.name?.toLowerCase().includes(searchTerm.toLowerCase());
-    
     return matchesStatus && matchesSearch;
   });
 

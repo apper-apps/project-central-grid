@@ -140,7 +140,7 @@ const handleCreateTask = async (taskData) => {
     try {
       const newTask = await taskService.create({
         ...taskData,
-        projectId: project.Id
+projectId: project.Id
       });
       
       // Add task to the selected task list
@@ -148,7 +148,7 @@ const handleCreateTask = async (taskData) => {
         await taskListService.addTaskToList(selectedTaskList.Id, newTask.Id);
         setTaskLists(prev => 
           prev.map(tl => 
-            tl.Id === selectedTaskList.Id 
+tl.Id === selectedTaskList.Id 
               ? { ...tl, tasks: [...tl.tasks, newTask.Id] }
               : tl
           )
@@ -170,7 +170,7 @@ const handleCreateTask = async (taskData) => {
       const updatedTask = await taskService.update(editingTask.Id, taskData);
       setTasks(prev => 
         prev.map(task => 
-          task.Id === editingTask.Id ? updatedTask : task
+task.Id === editingTask.Id ? updatedTask : task
         )
       );
       setShowTaskModal(false);
@@ -234,7 +234,7 @@ const handleCreateTask = async (taskData) => {
     }
 
     try {
-      const updatedTask = await taskService.update(draggedTask.Id, {
+const updatedTask = await taskService.update(draggedTask.Id, {
         completed: newCompleted,
         status: targetStatus
       });
@@ -255,7 +255,7 @@ const handleCreateTask = async (taskData) => {
   };
 
   const getKanbanColumns = () => {
-    const todoTasks = tasks.filter(task => !task.completed && (!task.status || task.status === 'todo'));
+const todoTasks = tasks.filter(task => !task.completed && (!task.status || task.status === 'todo'));
     const inProgressTasks = tasks.filter(task => !task.completed && task.status === 'inprogress');
     const completedTasks = tasks.filter(task => task.completed);
 
@@ -692,9 +692,9 @@ switch (status) {
 };
 
 const getTaskStats = () => {
-    const total = tasks.length;
+const total = tasks.length;
     const completed = tasks.filter(task => task.completed).length;
-const pending = total - completed;
+    const pending = total - completed;
     const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
     
     return { total, completed, pending, completionRate };
@@ -795,7 +795,7 @@ const taskStats = getTaskStats();
   };
 
 const getDateTasks = (date) => {
-    return tasks.filter(task => {
+return tasks.filter(task => {
       if (!task.dueDate) return false;
       return isSameDay(parseISO(task.dueDate), date);
     });
@@ -1053,10 +1053,10 @@ const getMilestoneTaskLists = (milestoneId) => {
               <div className="mb-3">
                 <h5 className="font-medium text-gray-700 mb-2">Tasks Due:</h5>
                 <div className="space-y-1">
-                  {getDateTasks(selectedCalendarDate).map(task => (
+{getDateTasks(selectedCalendarDate).map(task => (
                     <div key={task.Id} className="flex items-center justify-between text-sm">
                       <span className={task.completed ? 'line-through text-gray-500' : 'text-gray-900'}>
-                        {task.name}
+                        {task.name || task.Name || 'Untitled Task'}
                       </span>
                       <span className={`
                         px-2 py-1 text-xs rounded
@@ -1626,7 +1626,7 @@ const getMilestoneTaskLists = (milestoneId) => {
                       
                       {/* Timeline Tasks */}
                       <div className="space-y-2">
-                        {tasks.map((task) => {
+{tasks.map((task) => {
                           const startDate = new Date(task.startDate || task.createdAt);
                           const endDate = new Date(task.dueDate);
                           const duration = Math.max(1, differenceInDays(endDate, startDate) + 1);
@@ -2043,7 +2043,7 @@ const getMilestoneTaskLists = (milestoneId) => {
             ) : (
               <div className="space-y-4">
 {timeEntries.map((entry) => {
-const task = tasks.find(t => t.Id === entry.taskId);
+                              const task = tasks.find(t => t.Id === entry.taskId);
 return (
                     <div key={entry.Id} className="border border-gray-200 rounded-lg p-4">
                       <div className="flex items-start justify-between mb-2">
@@ -2220,7 +2220,7 @@ return (
                           
                           {/* Gantt Tasks */}
                           <div className="space-y-1">
-                            {tasks.map((task) => {
+{tasks.map((task) => {
                               const taskStart = task.startDate ? parseISO(task.startDate) : parseISO(task.createdAt);
                               const taskEnd = task.dueDate ? parseISO(task.dueDate) : addDays(taskStart, 1);
                               const position = getTaskPosition(task);
@@ -2245,7 +2245,7 @@ return (
                                         />
 </Button>
                                       <div className="flex-1 min-w-0">
-                                        <div className="font-medium text-sm text-gray-900 truncate">{task.name}</div>
+                                        <div className="font-medium text-sm text-gray-900 truncate">{task.name || task.Name || 'Untitled Task'}</div>
                                         <div className="text-xs text-gray-500 flex items-center gap-2 mt-1">
                                           <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${
                                             task.priority === 'High' 

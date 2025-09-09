@@ -31,8 +31,8 @@ const TaskCard = ({ task, project, onEdit, onDelete, onToggleComplete, compact =
               <h3 
                 className={`font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors ${task.completed ? 'line-through text-gray-500' : ''}`}
                 onClick={() => navigate(`/tasks/${task.Id}`)}
-              >
-                {task.name}
+>
+                {task.name || task.Name || 'Untitled Task'}
               </h3>
               {task.priority && (
 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -46,7 +46,7 @@ const TaskCard = ({ task, project, onEdit, onDelete, onToggleComplete, compact =
                 </span>
               )}
             </div>
-            {task.description && (
+{task.description && (
               <p className={`text-sm mb-3 ${task.completed ? 'text-gray-400' : 'text-gray-600'}`}>
                 {task.description}
               </p>
@@ -58,7 +58,7 @@ const TaskCard = ({ task, project, onEdit, onDelete, onToggleComplete, compact =
                   {project.name}
                 </div>
               )}
-              {task.dueDate && (
+{task.dueDate && (
                 <div className={`flex items-center ${
                   new Date(task.dueDate) < new Date() && !task.completed 
                     ? 'text-red-600 font-medium' 
@@ -104,7 +104,7 @@ const TaskCard = ({ task, project, onEdit, onDelete, onToggleComplete, compact =
             {task.completed ? 'Completed' : 'In Progress'}
           </span>
           <span>
-            Created {new Date(task.createdAt).toLocaleDateString()}
+Created {new Date(task.createdAt || task.created_at_c || new Date()).toLocaleDateString()}
           </span>
         </div>
       )}
@@ -121,7 +121,7 @@ const TaskCard = ({ task, project, onEdit, onDelete, onToggleComplete, compact =
             {task.completed ? 'Done' : task.status === 'inprogress' ? 'In Progress' : 'To Do'}
           </span>
           {task.dueDate && (
-            <span className={`text-xs ${
+<span className={`text-xs ${
               new Date(task.dueDate) < new Date() && !task.completed 
                 ? 'text-red-600 font-medium' 
                 : 'text-gray-500'

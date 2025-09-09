@@ -1,4 +1,6 @@
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import React from "react";
+import { create, getAll, getById, update } from "@/services/api/teamMemberService";
 
 class TaskService {
   constructor() {
@@ -20,7 +22,7 @@ class TaskService {
     try {
       const apperClient = this.getApperClient();
       const params = {
-        fields: [
+fields: [
           { field: { Name: "Name" } },
           { field: { Name: "Tags" } },
           { field: { Name: "description_c" } },
@@ -31,18 +33,20 @@ class TaskService {
           { field: { Name: "created_at_c" } },
           { field: { Name: "status_c" } },
           { field: { Name: "project_id_c" } }
-        ]
+        ],
+        pagingInfo: {
+          limit: 100,
+          offset: 0
+        }
       };
 
-      const response = await apperClient.fetchRecords(this.tableName, params);
-      
-      if (!response.success) {
-        console.error(response.message);
-        toast.error(response.message);
+      const response = await apperClient.fetchRecords('task_c', params);
+
+      if (!response || !response.data || response.data.length === 0) {
         return [];
       }
 
-      return response.data || [];
+      return response.data.map(task => this.transformTaskFromDB(task));
     } catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error fetching tasks:", error?.response?.data?.message);
@@ -58,7 +62,7 @@ class TaskService {
     try {
       const apperClient = this.getApperClient();
       const params = {
-        fields: [
+fields: [
           { field: { Name: "Name" } },
           { field: { Name: "Tags" } },
           { field: { Name: "description_c" } },
@@ -72,13 +76,13 @@ class TaskService {
         ]
       };
 
-      const response = await apperClient.getRecordById(this.tableName, parseInt(id), params);
-      
+      const response = await apperClient.getRecordById('task_c', id, params);
+
       if (!response || !response.data) {
         return null;
       }
-      
-      return response.data;
+
+return this.transformTaskFromDB(response.data);
     } catch (error) {
       if (error?.response?.data?.message) {
         console.error(`Error fetching task with ID ${id}:`, error?.response?.data?.message);
@@ -96,8 +100,8 @@ class TaskService {
       
       // Only include updateable fields
       const params = {
-        records: [{
-Name: taskData.Name || taskData.title || taskData.name,
+records: [{
+          Name: taskData.Name || taskData.title || taskData.name,
           Tags: taskData.Tags || "",
           description_c: taskData.description_c || taskData.description || "",
           completed_c: taskData.completed_c !== undefined ? taskData.completed_c : false,
@@ -110,8 +114,8 @@ Name: taskData.Name || taskData.title || taskData.name,
         }]
       };
 
-      const response = await apperClient.createRecord(this.tableName, params);
-      
+      const response = await apperClient.createRecord('task_c', params);
+
       if (!response.success) {
         console.error(response.message);
         toast.error(response.message);
@@ -121,18 +125,15 @@ Name: taskData.Name || taskData.title || taskData.name,
       if (response.results) {
         const successfulRecords = response.results.filter(result => result.success);
         const failedRecords = response.results.filter(result => !result.success);
-        
+
         if (failedRecords.length > 0) {
           console.error(`Failed to create tasks ${failedRecords.length} records:${JSON.stringify(failedRecords)}`);
           failedRecords.forEach(record => {
-            record.errors?.forEach(error => {
-              toast.error(`${error.fieldLabel}: ${error}`);
-            });
             if (record.message) toast.error(record.message);
           });
-        }
-        
-        return successfulRecords.length > 0 ? successfulRecords[0].data : null;
+}
+
+        return successfulRecords.length > 0 ? this.transformTaskFromDB(successfulRecords[0].data) : null;
       }
       
       return null;
@@ -156,7 +157,7 @@ Name: taskData.Name || taskData.title || taskData.name,
         Id: parseInt(id)
       };
       
-      if (taskData.Name !== undefined) updateData.Name = taskData.Name;
+if (taskData.Name !== undefined) updateData.Name = taskData.Name;
       if (taskData.name !== undefined) updateData.Name = taskData.name;
       if (taskData.title !== undefined) updateData.Name = taskData.title;
       if (taskData.Tags !== undefined) updateData.Tags = taskData.Tags;
@@ -174,13 +175,16 @@ Name: taskData.Name || taskData.title || taskData.name,
       if (taskData.status !== undefined) updateData.status_c = taskData.status;
       if (taskData.project_id_c !== undefined) updateData.project_id_c = parseInt(taskData.project_id_c);
       if (taskData.projectId !== undefined) updateData.project_id_c = parseInt(taskData.projectId);
-      
+
       const params = {
-        records: [updateData]
+        records: [{
+          Id: id,
+          ...updateData
+        }]
       };
 
-      const response = await apperClient.updateRecord(this.tableName, params);
-      
+      const response = await apperClient.updateRecord('task_c', params);
+
       if (!response.success) {
         console.error(response.message);
         toast.error(response.message);
@@ -190,18 +194,14 @@ Name: taskData.Name || taskData.title || taskData.name,
       if (response.results) {
         const successfulUpdates = response.results.filter(result => result.success);
         const failedUpdates = response.results.filter(result => !result.success);
-        
+
         if (failedUpdates.length > 0) {
-          console.error(`Failed to update tasks ${failedUpdates.length} records:${JSON.stringify(failedUpdates)}`);
+          console.error(`Failed to update tasks ${failedUpdates.length} records:${failedUpdates}`);
           failedUpdates.forEach(record => {
-            record.errors?.forEach(error => {
-              toast.error(`${error.fieldLabel}: ${error}`);
-            });
             if (record.message) toast.error(record.message);
           });
         }
-        
-        return successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
+return successfulUpdates.length > 0 ? this.transformTaskFromDB(successfulUpdates[0].data) : null;
       }
       
       return null;
@@ -261,7 +261,7 @@ Name: taskData.Name || taskData.title || taskData.name,
     try {
       const apperClient = this.getApperClient();
       const params = {
-        fields: [
+fields: [
           { field: { Name: "Name" } },
           { field: { Name: "Tags" } },
           { field: { Name: "description_c" } },
@@ -277,20 +277,18 @@ Name: taskData.Name || taskData.title || taskData.name,
           {
             FieldName: "project_id_c",
             Operator: "EqualTo",
-            Values: [parseInt(projectId)]
+            Values: [projectId]
           }
         ]
       };
 
-      const response = await apperClient.fetchRecords(this.tableName, params);
-      
-      if (!response.success) {
-        console.error(response.message);
-        toast.error(response.message);
+      const response = await apperClient.fetchRecords('task_c', params);
+
+      if (!response || !response.data) {
         return [];
       }
 
-      return response.data || [];
+return response.data.map(task => this.transformTaskFromDB(task));
     } catch (error) {
       if (error?.response?.data?.message) {
         console.error("Error fetching tasks by project:", error?.response?.data?.message);
@@ -312,6 +310,39 @@ async markComplete(id) {
       status_c: status,
       completed_c: status === 'Done' || status === 'Completed'
     });
+  }
+
+  // Transform database task to UI-friendly format
+  transformTaskFromDB(dbTask) {
+    return {
+      Id: dbTask.Id,
+      name: dbTask.Name,
+      tags: dbTask.Tags,
+      description: dbTask.description_c,
+      completed: dbTask.completed_c,
+      priority: dbTask.priority_c,
+      startDate: dbTask.start_date_c,
+      dueDate: dbTask.due_date_c,
+      createdAt: dbTask.created_at_c,
+      status: dbTask.status_c,
+      projectId: dbTask.project_id_c?.Id || dbTask.project_id_c,
+      project: dbTask.project_id_c // Keep the full lookup object for display
+    };
+  }
+
+  // Transform UI task data to database format
+  transformTaskToDB(uiTask) {
+    return {
+      Name: uiTask.name || uiTask.Name,
+      Tags: uiTask.tags || uiTask.Tags || "",
+      description_c: uiTask.description || uiTask.description_c || "",
+      completed_c: uiTask.completed !== undefined ? uiTask.completed : uiTask.completed_c,
+      priority_c: uiTask.priority || uiTask.priority_c || "Medium",
+      start_date_c: uiTask.startDate || uiTask.start_date_c,
+      due_date_c: uiTask.dueDate || uiTask.due_date_c,
+      status_c: uiTask.status || uiTask.status_c || "To Do",
+      project_id_c: uiTask.projectId ? parseInt(uiTask.projectId) : (uiTask.project_id_c ? parseInt(uiTask.project_id_c) : null)
+    };
   }
 }
 

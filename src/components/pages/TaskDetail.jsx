@@ -281,7 +281,7 @@ const TaskDetail = () => {
           </>
         )}
         <ApperIcon name="ChevronRight" size={16} className="text-gray-400" />
-        <span className="text-gray-900 font-medium" aria-current="page">{task.name}</span>
+<span className="text-gray-900 font-medium" aria-current="page">{task.name || task.Name || 'Untitled Task'}</span>
       </nav>
 
       {/* Enhanced Task Header */}
@@ -292,7 +292,7 @@ const TaskDetail = () => {
               <h1 className={`text-2xl lg:text-3xl font-bold transition-colors ${
                 task.completed ? 'line-through text-gray-500' : 'text-gray-900'
               }`}>
-                {task.name}
+{task.name || task.Name || 'Untitled Task'}
               </h1>
               {task.priority && (
                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${getPriorityColor(task.priority)}`}>
@@ -381,14 +381,14 @@ const TaskDetail = () => {
               <h3 className="text-sm font-medium text-gray-500">Start Date</h3>
               <div className="flex items-center gap-2 text-gray-900">
                 <ApperIcon name="Calendar" size={16} className="text-gray-400" />
-                <span className="font-medium">{formatDate(task.startDate)}</span>
+<span className="font-medium">{formatDate(task.startDate)}</span>
               </div>
             </div>
 
             <div className="space-y-2">
               <h3 className="text-sm font-medium text-gray-500">Due Date</h3>
               <div className="flex items-center gap-2 text-gray-900">
-                <ApperIcon name="CalendarClock" size={16} className="text-gray-400" />
+<ApperIcon name="CalendarClock" size={16} className="text-gray-400" />
                 <span className="font-medium">{formatDate(task.dueDate)}</span>
               </div>
             </div>
@@ -464,13 +464,13 @@ const TaskDetail = () => {
                     <div className="space-y-3">
                       <div className="flex justify-between items-center text-sm">
                         <span className="text-gray-600">Priority</span>
-                        <span className={`font-medium px-2 py-1 rounded text-xs ${getPriorityColor(task.priority)}`}>
+<span className={`font-medium px-2 py-1 rounded text-xs ${getPriorityColor(task.priority)}`}>
                           {task.priority || 'Not set'}
                         </span>
                       </div>
                       <div className="flex justify-between items-center text-sm">
                         <span className="text-gray-600">Status</span>
-                        <span className={`font-medium px-2 py-1 rounded text-xs ${getStatusColor(task.completed)}`}>
+<span className={`font-medium px-2 py-1 rounded text-xs ${getStatusColor(task.completed)}`}>
                           {task.completed ? 'Completed' : 'In Progress'}
                         </span>
                       </div>
@@ -625,11 +625,11 @@ const TaskDetail = () => {
         title={editingTime ? "Edit Time Entry" : "Log Time Entry"}
       >
         <TimeEntryForm
-          projects={projects}
+projects={projects}
           timeEntry={editingTime || {
             projectId: task.projectId,
             taskId: task.Id,
-            description: `Work on ${task.name}`
+            description: `Work on ${task.name || task.Name || 'this task'}`
           }}
           onSubmit={handleTimeSubmit}
           onCancel={handleCloseTimeModal}
