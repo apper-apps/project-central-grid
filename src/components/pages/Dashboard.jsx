@@ -167,8 +167,7 @@ const formatDate = (dateString) => {
               </div>
             </div>
           </div>
-          
-          {loading ? (
+{loading ? (
             <div className="space-y-3">
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="animate-pulse">
@@ -178,7 +177,7 @@ const formatDate = (dateString) => {
               ))}
             </div>
           ) : (
-<div className="space-y-4 max-h-80 overflow-y-auto">
+            <div className="space-y-4 max-h-80 overflow-y-auto">
               <div className="text-center py-6 text-gray-500">
                 <ApperIcon name="Target" size={32} className="mx-auto mb-2 text-gray-300" />
                 <p className="text-sm">No upcoming milestones</p>
@@ -212,14 +211,15 @@ const formatDate = (dateString) => {
                 </div>
               ))}
             </div>
-          ) : (
-<div className="space-y-4 max-h-80 overflow-y-auto">
+) : (
+            <div className="space-y-4 max-h-80 overflow-y-auto">
               <div className="text-center py-6 text-gray-500">
                 <ApperIcon name="Briefcase" size={32} className="mx-auto mb-2 text-gray-300" />
                 <p className="text-sm">Recent project activity</p>
                 <p className="text-xs mt-1">Project updates and progress will appear here</p>
               </div>
             </div>
+          )}
         </Card>
 
         {/* My Tasks */}
