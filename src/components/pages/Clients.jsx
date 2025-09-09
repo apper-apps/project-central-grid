@@ -30,12 +30,12 @@ const [statusFilter, setStatusFilter] = useState("All");
 const filteredClients = (clients || []).filter(client => {
     if (!client) return false;
     
-    const matchesStatus = statusFilter === "All" || client.status === statusFilter;
+    const matchesStatus = statusFilter === "All" || client.status_c === statusFilter;
     const matchesSearch = !searchTerm || 
-      client.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      client.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      client.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      client.phone?.toLowerCase().includes(searchTerm.toLowerCase());
+      client.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.email_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.company_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.phone_c?.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesStatus && matchesSearch;
   });
 
@@ -248,8 +248,8 @@ const closeModal = () => {
                     >
                       {status}
                       {status !== "All" && (
-                        <span className="ml-1 text-xs opacity-75">
-                          ({clients.filter(c => c.status === status).length})
+<span className="ml-1 text-xs opacity-75">
+                          ({clients.filter(c => c.status_c === status).length})
                         </span>
                       )}
                     </button>
@@ -327,7 +327,7 @@ const closeModal = () => {
                             <div className="flex-shrink-0 w-10 h-10">
                               <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
                                 <span className="text-sm font-medium text-blue-800">
-                                  {client.name?.charAt(0)?.toUpperCase()}
+                                  {client.Name?.charAt(0)?.toUpperCase()}
                                 </span>
                               </div>
                             </div>
@@ -336,27 +336,27 @@ const closeModal = () => {
                                 className="text-sm font-medium text-gray-900 hover:text-blue-600 cursor-pointer"
                                 onClick={() => navigate(`/clients/${client.Id}`)}
                               >
-                                {client.name}
+                                {client.Name}
                               </div>
-                              {client.company && (
-                                <div className="text-sm text-gray-500">{client.company}</div>
+                              {client.company_c && (
+                                <div className="text-sm text-gray-500">{client.company_c}</div>
                               )}
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{client.email}</div>
-                          {client.phone && (
-                            <div className="text-sm text-gray-500">{client.phone}</div>
+                          <div className="text-sm text-gray-900">{client.email_c}</div>
+                          {client.phone_c && (
+                            <div className="text-sm text-gray-500">{client.phone_c}</div>
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            client.status === 'Active' ? 'status-completed' :
-                            client.status === 'Inactive' ? 'status-on-hold' :
+                            client.status_c === 'Active' ? 'status-completed' :
+                            client.status_c === 'Inactive' ? 'status-on-hold' :
                             'status-in-progress'
                           }`}>
-                            {client.status}
+                            {client.status_c}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">

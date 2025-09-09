@@ -23,46 +23,46 @@ const statusColors = {
 <Card hover className="p-6">
     <div
         className="cursor-pointer"
-        onClick={() => navigate(`/clients/${client.Id}`)}>
+onClick={() => navigate(`/clients/${client.Id}`)}>
         <div className="mb-4">
-            <h3 className="font-semibold text-gray-900 mb-1">{client.name}</h3>
+            <h3 className="font-semibold text-gray-900 mb-1">{client.Name}</h3>
             <div className="flex items-center gap-2 mb-2">
-                <p className="text-sm text-gray-600">{client.company}</p>
-                {getStatusBadge(client.status)}
+                <p className="text-sm text-gray-600">{client.company_c}</p>
+                {getStatusBadge(client.status_c)}
             </div>
             <div className="space-y-1">
                 <div className="flex items-center text-sm text-gray-500">
                     <ApperIcon name="Mail" size={14} className="mr-2" />
-                    {client.email}
+                    {client.email_c}
                 </div>
                 <div className="flex items-center text-sm text-gray-500">
                     <ApperIcon name="Phone" size={14} className="mr-2" />
-                    {client.phone}
+                    {client.phone_c}
                 </div>
-                {client.website && <div className="flex items-center text-sm text-gray-500">
+                {client.website_c && <div className="flex items-center text-sm text-gray-500">
                     <ApperIcon name="Globe" size={14} className="mr-2" />
                     <a
-                        href={client.website}
+                        href={client.website_c}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="hover:text-blue-600 truncate">
-                        {client.website}
+                        {client.website_c}
                     </a>
                 </div>}
-                {client.address && <div className="flex items-center text-sm text-gray-500">
+                {client.address_c && <div className="flex items-center text-sm text-gray-500">
                     <ApperIcon name="MapPin" size={14} className="mr-2" />
-                    <span className="truncate">{client.address}</span>
+                    <span className="truncate">{client.address_c}</span>
                 </div>}
-                {client.industry && <div className="flex items-center text-sm text-gray-500">
+                {client.industry_c && <div className="flex items-center text-sm text-gray-500">
                     <ApperIcon name="Building2" size={14} className="mr-2" />
-                    {client.industry}
+                    {client.industry_c}
                 </div>}
             </div>
         </div>
         <div
             className="flex items-center justify-between pt-3 border-t border-gray-100">
             <div className="text-xs text-gray-400">
-                {client.projectCount || 0}projects
+                {client.projectCount || 0} projects
                           </div>
             <div className="flex space-x-1">
                 <Button

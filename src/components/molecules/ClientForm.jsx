@@ -20,14 +20,14 @@ const [formData, setFormData] = useState({
   useEffect(() => {
 if (client) {
       setFormData({
-        name: client.name || "",
-        company: client.company || "",
-        email: client.email || "",
-        phone: client.phone || "",
-        website: client.website || "",
-        address: client.address || "",
-        industry: client.industry || "",
-        status: client.status || "Active"
+        name: client.Name || client.name || "",
+        company: client.company_c || client.company || "",
+        email: client.email_c || client.email || "",
+        phone: client.phone_c || client.phone || "",
+        website: client.website_c || client.website || "",
+        address: client.address_c || client.address || "",
+        industry: client.industry_c || client.industry || "",
+        status: client.status_c || client.status || "Active"
       });
     }
   }, [client]);

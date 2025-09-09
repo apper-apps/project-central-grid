@@ -216,7 +216,7 @@ const statusColors = {
             Back to Clients
           </Button>
           <div>
-<h1 className="text-3xl font-bold gradient-text mb-2">{client.name}</h1>
+<h1 className="text-3xl font-bold gradient-text mb-2">{client.Name}</h1>
             <p className="text-gray-600">Client Details & Projects</p>
           </div>
         </div>
@@ -246,21 +246,21 @@ const statusColors = {
           <div>
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Client Information</h2>
           </div>
-{getStatusBadge(client.status)}
+{getStatusBadge(client.status_c)}
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div>
+<div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Company</label>
-            <p className="text-gray-900">{client.company}</p>
+            <p className="text-gray-900">{client.company_c}</p>
           </div>
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
             <div className="flex items-center">
               <ApperIcon name="Mail" size={16} className="mr-2 text-gray-500" />
-              <a href={`mailto:${client.email}`} className="text-blue-600 hover:text-blue-800">
-                {client.email}
+              <a href={`mailto:${client.email_c}`} className="text-blue-600 hover:text-blue-800">
+                {client.email_c}
               </a>
             </div>
           </div>
@@ -269,43 +269,43 @@ const statusColors = {
             <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
             <div className="flex items-center">
               <ApperIcon name="Phone" size={16} className="mr-2 text-gray-500" />
-              <a href={`tel:${client.phone}`} className="text-blue-600 hover:text-blue-800">
-                {client.phone}
+              <a href={`tel:${client.phone_c}`} className="text-blue-600 hover:text-blue-800">
+                {client.phone_c}
               </a>
             </div>
           </div>
           
-          {client.address && (
+          {client.address_c && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
               <div className="flex items-start">
                 <ApperIcon name="MapPin" size={16} className="mr-2 text-gray-500 mt-0.5" />
-                <p className="text-gray-900">{client.address}</p>
+                <p className="text-gray-900">{client.address_c}</p>
               </div>
             </div>
           )}
           
-          {client.website && (
+          {client.website_c && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Website</label>
               <div className="flex items-center">
                 <ApperIcon name="Globe" size={16} className="mr-2 text-gray-500" />
                 <a 
-                  href={client.website.startsWith('http') ? client.website : `https://${client.website}`}
+                  href={client.website_c.startsWith('http') ? client.website_c : `https://${client.website_c}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:text-blue-800"
                 >
-                  {client.website}
+                  {client.website_c}
                 </a>
               </div>
             </div>
           )}
           
-          {client.industry && (
+          {client.industry_c && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Industry</label>
-              <p className="text-gray-900">{client.industry}</p>
+              <p className="text-gray-900">{client.industry_c}</p>
             </div>
           )}
         </div>
