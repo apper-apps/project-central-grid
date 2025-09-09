@@ -85,21 +85,21 @@ const filterMembers = () => {
     // Apply search filter
     if (searchTerm) {
       filtered = filtered.filter(member => 
-        member.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        member.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        member.role?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        member.department?.toLowerCase().includes(searchTerm.toLowerCase())
+member.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        member.email_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        member.role_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        member.department_c?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Apply status filter
     if (statusFilter !== 'All') {
-      filtered = filtered.filter(member => member.status === statusFilter);
+filtered = filtered.filter(member => member.status_c === statusFilter);
     }
 
     // Apply department filter
     if (departmentFilter !== 'All') {
-      filtered = filtered.filter(member => member.department === departmentFilter);
+filtered = filtered.filter(member => member.department_c === departmentFilter);
     }
 
     setFilteredMembers(filtered);
@@ -118,7 +118,7 @@ const filterMembers = () => {
 const handleDeleteMember = async (member) => {
     if (window.confirm(`Are you sure you want to remove ${member.name} from the team?`)) {
       try {
-        await teamMemberService.delete(member.Id);
+await teamMemberService.deleteById(member.Id);
         setMembers(prev => prev.filter(m => m.Id !== member.Id));
         await fetchWorkloadStats();
         toast.success(`${member.name} has been removed from the team`);
@@ -136,11 +136,11 @@ const handleFormSubmit = async (memberData) => {
       if (editingMember) {
         const updatedMember = await teamMemberService.update(editingMember.Id, memberData);
         setMembers(prev => prev.map(m => m.Id === editingMember.Id ? updatedMember : m));
-        toast.success(`${memberData.name} has been updated successfully`);
+toast.success(`${memberData.Name || memberData.name} has been updated successfully`);
       } else {
         const newMember = await teamMemberService.create(memberData);
         setMembers(prev => [...prev, newMember]);
-        toast.success(`${memberData.name} has been added to the team`);
+toast.success(`${memberData.Name || memberData.name} has been added to the team`);
       }
       
       await fetchWorkloadStats();
@@ -159,7 +159,7 @@ const handleFormSubmit = async (memberData) => {
     setEditingMember(null);
   };
 
-const departments = [...new Set(members.map(member => member.department))];
+const departments = [...new Set(members.map(member => member.department_c))];
 
   if (loading) return <Loading />;
   if (error) return <Error message={error} onRetry={fetchMembers} />;
@@ -358,45 +358,45 @@ const departments = [...new Set(members.map(member => member.department))];
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="flex-shrink-0 w-10 h-10">
-                            <img 
-                              src={member.avatar} 
-                              alt={member.name}
+<img 
+                              src={member.avatar_c || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.Name || 'User')}&background=2563eb&color=fff`} 
+                              alt={member.Name}
                               className="w-10 h-10 rounded-full object-cover"
                             />
                           </div>
                           <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{member.name}</div>
-                            <div className="text-sm text-gray-500">{member.email}</div>
+                            <div className="text-sm font-medium text-gray-900">{member.Name}</div>
+                            <div className="text-sm text-gray-500">{member.email_c}</div>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {member.role}
+{member.role_c}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {member.department}
+{member.department_c}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          member.status === 'Active' ? 'bg-green-100 text-green-800' :
-                          member.status === 'Away' ? 'bg-yellow-100 text-yellow-800' :
+member.status_c === 'Active' ? 'bg-green-100 text-green-800' :
+                          member.status_c === 'Away' ? 'bg-yellow-100 text-yellow-800' :
                           'bg-gray-100 text-gray-800'
                         }`}>
-                          {member.status}
+                          {member.status_c}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
                             <div 
-                              className={`h-2 rounded-full ${
-                                member.workloadPercentage <= 75 ? 'bg-green-500' :
-                                member.workloadPercentage <= 90 ? 'bg-yellow-500' : 'bg-red-500'
+className={`h-2 rounded-full ${
+                                (member.current_workload_c || 0) / (member.max_capacity_c || 1) * 100 <= 75 ? 'bg-green-500' :
+                                (member.current_workload_c || 0) / (member.max_capacity_c || 1) * 100 <= 90 ? 'bg-yellow-500' : 'bg-red-500'
                               }`}
-                              style={{ width: `${Math.min(member.workloadPercentage || 0, 100)}%` }}
+                              style={{ width: `${Math.min(((member.current_workload_c || 0) / (member.max_capacity_c || 1)) * 100, 100)}%` }}
                             />
                           </div>
-                          <span className="text-sm text-gray-600">{member.workloadPercentage || 0}%</span>
+                          <span className="text-sm text-gray-600">{Math.round(((member.current_workload_c || 0) / (member.max_capacity_c || 1)) * 100)}%</span>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

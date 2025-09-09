@@ -31,7 +31,7 @@ const statusColors = {
     return 'bg-green-500';
   };
 
-  const workloadPercentage = Math.min((member.currentWorkload / member.maxCapacity) * 100, 100);
+const workloadPercentage = Math.min(((member.current_workload_c || 0) / (member.max_capacity_c || 1)) * 100, 100);
 
   const handleViewDetails = () => {
     navigate(`/team/${member.Id}`);
@@ -45,29 +45,29 @@ const statusColors = {
           <div className="flex items-center space-x-4">
             <div className="relative">
               <img
-                src={member.avatar}
-                alt={member.name}
+src={member.avatar_c || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.Name || 'User')}&background=2563eb&color=fff`}
+                alt={member.Name}
                 className="w-12 h-12 rounded-full object-cover"
                 onError={(e) => {
-                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=2563eb&color=fff`;
+                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.Name || 'User')}&background=2563eb&color=fff`;
                 }}
               />
 <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${
-                member.status === 'Active' ? 'bg-green-500' : 
-                member.status === 'Away' ? 'bg-yellow-500' : 'bg-gray-400'
+                member.status_c === 'Active' ? 'bg-green-500' : 
+                member.status_c === 'Away' ? 'bg-yellow-500' : 'bg-gray-400'
               }`} style={{
-                backgroundColor: member.status === 'Active' ? '#4CAF50' : 
-                                member.status === 'Away' ? '#F1C40F' : '#9E9E9E'
+                backgroundColor: member.status_c === 'Active' ? '#4CAF50' : 
+                                member.status_c === 'Away' ? '#F1C40F' : '#9E9E9E'
               }} />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">{member.name}</h3>
-              <p className="text-sm text-gray-600">{member.role}</p>
-              <p className="text-xs text-gray-500">{member.department}</p>
+              <h3 className="text-lg font-semibold text-gray-900">{member.Name}</h3>
+              <p className="text-sm text-gray-600">{member.role_c}</p>
+              <p className="text-xs text-gray-500">{member.department_c}</p>
             </div>
           </div>
-          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusBadge(member.status)}`}>
-            {member.status}
+<span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusBadge(member.status_c)}`}>
+            {member.status_c}
           </span>
         </div>
 
@@ -75,13 +75,13 @@ const statusColors = {
         <div className="mb-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-gray-700">Current Workload</span>
-            <span className={`text-sm font-semibold ${getWorkloadColor(member.currentWorkload, member.maxCapacity)}`}>
-              {member.currentWorkload}h / {member.maxCapacity}h
+<span className={`text-sm font-semibold ${getWorkloadColor(member.current_workload_c, member.max_capacity_c)}`}>
+              {member.current_workload_c || 0}h / {member.max_capacity_c || 0}h
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
-              className={`h-2 rounded-full transition-all duration-300 ${getWorkloadBarColor(member.currentWorkload, member.maxCapacity)}`}
+className={`h-2 rounded-full transition-all duration-300 ${getWorkloadBarColor(member.current_workload_c, member.max_capacity_c)}`}
               style={{ width: `${workloadPercentage}%` }}
             />
           </div>
@@ -116,13 +116,13 @@ const statusColors = {
         <div className="grid grid-cols-2 gap-4 mb-4 p-3 bg-gray-50 rounded-lg">
           <div className="text-center">
             <div className="text-lg font-semibold text-gray-900">
-              {member.totalTasksThisMonth > 0 ? Math.round((member.completedTasksThisMonth / member.totalTasksThisMonth) * 100) : 0}%
+{(member.total_tasks_this_month_c || 0) > 0 ? Math.round(((member.completed_tasks_this_month_c || 0) / (member.total_tasks_this_month_c || 0)) * 100) : 0}%
             </div>
             <div className="text-xs text-gray-600">Task Completion</div>
           </div>
           <div className="text-center">
-            <div className="text-lg font-semibold text-gray-900">
-              {member.averageTaskCompletionTime || 0}d
+<div className="text-lg font-semibold text-gray-900">
+              {member.average_task_completion_time_c || 0}d
             </div>
             <div className="text-xs text-gray-600">Avg. Completion</div>
           </div>
@@ -132,11 +132,11 @@ const statusColors = {
         <div className="mb-4">
           <div className="flex items-center text-sm text-gray-600 mb-1">
             <ApperIcon name="Mail" size={14} className="mr-2" />
-            <span className="truncate">{member.email}</span>
+<span className="truncate">{member.email_c}</span>
           </div>
           <div className="flex items-center text-sm text-gray-600">
             <ApperIcon name="MapPin" size={14} className="mr-2" />
-            <span>{member.location}</span>
+            <span>{member.location_c}</span>
           </div>
         </div>
 

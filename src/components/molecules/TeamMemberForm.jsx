@@ -25,18 +25,18 @@ function TeamMemberForm({ isOpen, onClose, onSubmit, member, isLoading }) {
   const statuses = ['Active', 'Away', 'Inactive'];
 
   useEffect(() => {
-    if (member) {
+if (member) {
       setFormData({
-        name: member.name || '',
-        email: member.email || '',
-        role: member.role || '',
-        department: member.department || '',
-        status: member.status || 'Active',
-        phone: member.phone || '',
-        location: member.location || '',
-        avatar: member.avatar || '',
-        maxCapacity: member.maxCapacity || 40,
-        skills: member.skills || []
+        name: member.Name || '',
+        email: member.email_c || '',
+        role: member.role_c || '',
+        department: member.department_c || '',
+        status: member.status_c || 'Active',
+        phone: member.phone_c || '',
+        location: member.location_c || '',
+        avatar: member.avatar_c || '',
+        maxCapacity: member.max_capacity_c || 40,
+        skills: member.skills_c ? member.skills_c.split(',').map(skill => skill.trim()).filter(Boolean) : []
       });
     } else {
       setFormData({
@@ -92,10 +92,18 @@ function TeamMemberForm({ isOpen, onClose, onSubmit, member, isLoading }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      const submitData = {
-        ...formData,
-        startDate: member?.startDate || new Date().toISOString().split('T')[0],
-        maxCapacity: parseInt(formData.maxCapacity)
+const submitData = {
+        Name: formData.name,
+        email_c: formData.email,
+        role_c: formData.role,
+        department_c: formData.department,
+        status_c: formData.status,
+        phone_c: formData.phone,
+        location_c: formData.location,
+        avatar_c: formData.avatar,
+        start_date_c: member?.start_date_c || new Date().toISOString().split('T')[0],
+        max_capacity_c: parseInt(formData.maxCapacity),
+        skills_c: Array.isArray(formData.skills) ? formData.skills.join(', ') : formData.skills
       };
       onSubmit(submitData);
     }
