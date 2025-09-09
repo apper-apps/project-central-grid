@@ -159,7 +159,7 @@ const handleFormSubmit = async (memberData) => {
     setEditingMember(null);
   };
 
-  const departments = [...new Set(members.map(member => member.department))];
+const departments = [...new Set(members.map(member => member.department))];
 
   if (loading) return <Loading />;
   if (error) return <Error message={error} onRetry={fetchMembers} />;
