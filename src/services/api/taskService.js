@@ -97,10 +97,10 @@ class TaskService {
       // Only include updateable fields
       const params = {
         records: [{
-          Name: taskData.Name || taskData.title || taskData.name,
+Name: taskData.Name || taskData.title || taskData.name,
           Tags: taskData.Tags || "",
           description_c: taskData.description_c || taskData.description || "",
-          completed_c: taskData.completed_c || false,
+          completed_c: taskData.completed_c !== undefined ? taskData.completed_c : false,
           priority_c: taskData.priority_c || taskData.priority || "Medium",
           start_date_c: taskData.start_date_c || taskData.startDate || new Date().toISOString().split('T')[0],
           due_date_c: taskData.due_date_c || taskData.dueDate || "",
@@ -302,8 +302,8 @@ class TaskService {
   }
 
   // Mark task as complete
-  async markComplete(id) {
-    return this.update(id, { completed_c: true });
+async markComplete(id) {
+    return this.update(id, { completed_c: true, status_c: "Done" });
   }
 
   // Update task status

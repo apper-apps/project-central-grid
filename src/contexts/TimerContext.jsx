@@ -66,9 +66,9 @@ export const TimerProvider = ({ children }) => {
       duration,
       selectedProjectId,
       description,
-      startTime: startTime?.toISOString(),
+startTime: startTime?.toISOString(),
       isWidgetVisible,
-      sessions
+      sessions: sessions || []
     };
     localStorage.setItem('timerState', JSON.stringify(state));
   }, [isRunning, isPaused, duration, selectedProjectId, description, startTime, isWidgetVisible, sessions]);
@@ -99,7 +99,11 @@ export const TimerProvider = ({ children }) => {
       return;
     }
 
-    const project = projects.find(p => p.Id === parseInt(projectId));
+const project = projects.find(p => p.Id === parseInt(projectId));
+    if (!project) {
+      toast.error("Project not found");
+      return;
+    }
     if (!project) {
       toast.error('Selected project not found');
       return;
@@ -141,10 +145,10 @@ const stopTimer = async () => {
       const durationInHours = duration / 3600; // Convert seconds to hours
       
       const timeEntryData = {
-        projectId: selectedProjectId,
-        description: description || `Work on ${project?.name || 'Unknown Project'}`,
-        date: new Date().toISOString().split('T')[0],
-        duration: Math.round(durationInHours * 100) / 100 // Round to 2 decimal places
+project_id_c: parseInt(selectedProjectId),
+        description_c: description || `Work on ${project?.Name || 'Unknown Project'}`,
+        date_c: new Date().toISOString().split('T')[0],
+        duration_c: Math.round(durationInHours * 100) / 100 // Round to 2 decimal places
       };
 
       // Store session data
@@ -158,8 +162,7 @@ const stopTimer = async () => {
         date: new Date().toISOString().split('T')[0]
       };
       
-      setSessions(prev => [...prev, sessionData]);
-
+      setSessions(prev => [...(prev || []), sessionData]);
       await timeEntryService.createFromTimer(timeEntryData);
       
       const formatDuration = (seconds) => {
@@ -181,15 +184,15 @@ const stopTimer = async () => {
 
 const addManualTime = (hours, taskId = null) => {
 if (isRunning && hours > 0) {
-setDuration(prev => prev + (hours * 3600));
-toast.success(`Added ${hours} hours to current timer`);
-}
-};
+      setDuration(prev => prev + (hours * 3600));
+      toast.success(`Added ${hours} hours to current timer`);
+    }
+  };
 
   const getTodaysTotal = () => {
     const today = new Date().toISOString().split('T')[0];
-    const todaySessions = sessions.filter(session => session.date === today);
-    const totalHours = todaySessions.reduce((sum, session) => sum + session.duration, 0);
+    const todaySessions = (sessions || []).filter(session => session.date === today);
+    const totalHours = todaySessions.reduce((sum, session) => sum + (session.duration || 0), 0);
     return Math.round(totalHours * 100) / 100;
   };
 
@@ -199,8 +202,8 @@ toast.success(`Added ${hours} hours to current timer`);
     weekStart.setDate(today.getDate() - today.getDay());
     const weekStartStr = weekStart.toISOString().split('T')[0];
     
-    const weekSessions = sessions.filter(session => session.date >= weekStartStr);
-    const totalHours = weekSessions.reduce((sum, session) => sum + session.duration, 0);
+    const weekSessions = (sessions || []).filter(session => session.date >= weekStartStr);
+    const totalHours = weekSessions.reduce((sum, session) => sum + (session.duration || 0), 0);
     return Math.round(totalHours * 100) / 100;
   };
 
@@ -235,8 +238,7 @@ const value = {
     startTime,
     projects,
     isWidgetVisible,
-    sessions,
-    
+sessions: sessions || [],
     // Actions
     startTimer,
     pauseTimer,

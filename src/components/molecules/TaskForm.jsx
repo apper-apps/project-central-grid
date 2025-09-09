@@ -18,13 +18,13 @@ const [formData, setFormData] = useState({
 useEffect(() => {
     if (task) {
       setFormData({
-        name: task.name || "",
-        description: task.description || "",
-        projectId: task.projectId || "",
-        priority: task.priority || "Medium",
-        startDate: task.startDate || "",
-        dueDate: task.dueDate || "",
-        completed: task.completed || false
+name: task.Name || task.name || "",
+        description: task.description_c || task.description || "",
+        projectId: task.project_id_c?.Id || task.project_id_c || task.projectId || "",
+        priority: task.priority_c || task.priority || "Medium",
+        startDate: task.start_date_c || task.startDate || "",
+        dueDate: task.due_date_c || task.dueDate || "",
+        completed: task.completed_c || task.completed || false
       });
     } else {
       setFormData({
@@ -58,8 +58,14 @@ useEffect(() => {
     e.preventDefault();
     if (validateForm()) {
       onSubmit({
-        ...formData,
-        projectId: parseInt(formData.projectId)
+Name: formData.name,
+        description_c: formData.description,
+        project_id_c: parseInt(formData.projectId),
+        priority_c: formData.priority,
+        start_date_c: formData.startDate,
+        due_date_c: formData.dueDate,
+        completed_c: formData.completed,
+        status_c: formData.completed ? "Done" : "To Do"
       });
     }
   };
@@ -120,8 +126,8 @@ className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-transpa
         >
           <option value="">Select a project</option>
           {projects.map((project) => (
-            <option key={project.Id} value={project.Id}>
-              {project.name}
+<option key={project.Id} value={project.Id}>
+              {project.Name || project.name_c || project.name}
             </option>
           ))}
         </select>

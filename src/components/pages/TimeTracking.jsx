@@ -43,21 +43,21 @@ const [editingEntry, setEditingEntry] = useState(null);
       setLoading(true);
       setError("");
       const [entriesData, projectsData] = await Promise.all([
-        timeEntryService.getAll(),
+timeEntryService.getAll(),
         projectService.getAll()
       ]);
-      setTimeEntries(entriesData);
-      setProjects(projectsData);
+      setTimeEntries(entriesData || []);
+      setProjects(projectsData || []);
     } catch (err) {
       console.error("Failed to load data:", err);
       setError("Failed to load data. Please try again.");
     } finally {
       setLoading(false);
     }
-};
+  };
 
   // Helper function to find project by ID
-  const getProjectById = (projectId) => {
+const getProjectById = (projectId) => {
     return projects.find(project => project.Id === parseInt(projectId));
   };
 
@@ -66,7 +66,7 @@ useEffect(() => {
   }, []);
   // Filter and search logic
 const filteredAndSortedEntries = useMemo(() => {
-    let filtered = [...timeEntries];
+    let filtered = [...(timeEntries || [])];
     const currentUserId = 1; // In a real app, this would come from auth context
 
     // Apply user filter (My vs Team entries)
@@ -89,20 +89,20 @@ const filteredAndSortedEntries = useMemo(() => {
     
     switch (filter) {
       case "today":
-        filtered = filtered.filter(entry => entry.date === todayStr);
+filtered = filtered.filter(entry => (entry.date_c || entry.date) === todayStr);
         break;
       case "week":
         const weekStart = new Date(today);
         weekStart.setDate(today.getDate() - today.getDay());
         filtered = filtered.filter(entry => {
-          const entryDate = new Date(entry.date);
+const entryDate = new Date(entry.date_c || entry.date);
           return entryDate >= weekStart;
         });
         break;
       case "month":
         const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
         filtered = filtered.filter(entry => {
-          const entryDate = new Date(entry.date);
+const entryDate = new Date(entry.date_c || entry.date);
           return entryDate >= monthStart;
         });
         break;
@@ -110,23 +110,29 @@ const filteredAndSortedEntries = useMemo(() => {
 
     // Apply date range filter
     if (dateRange.start) {
-      filtered = filtered.filter(entry => entry.date >= dateRange.start);
+filtered = filtered.filter(entry => (entry.date_c || entry.date) >= dateRange.start);
     }
     if (dateRange.end) {
-      filtered = filtered.filter(entry => entry.date <= dateRange.end);
+filtered = filtered.filter(entry => (entry.date_c || entry.date) <= dateRange.end);
     }
 
     // Apply project filter
-    if (projectFilter) {
+if (projectFilter) {
+      filtered = filtered.filter(entry => 
+        (entry.project_id_c?.Id || entry.project_id_c || entry.projectId) === parseInt(projectFilter)
+      );
+    }
+
+    if (search) {
       filtered = filtered.filter(entry => entry.projectId === parseInt(projectFilter));
     }
 
     // Apply search filter
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
-      filtered = filtered.filter(entry => 
-        entry.description.toLowerCase().includes(search) ||
-        getProjectById(entry.projectId)?.name.toLowerCase().includes(search)
+filtered = filtered.filter(entry => 
+        (entry.description_c || entry.description || '').toLowerCase().includes(search) ||
+        getProjectById(entry.project_id_c?.Id || entry.project_id_c || entry.projectId)?.Name?.toLowerCase().includes(search)
       );
     }
 
@@ -136,11 +142,11 @@ const filteredAndSortedEntries = useMemo(() => {
       
       switch (sortBy) {
         case "date":
-          comparison = new Date(a.date) - new Date(b.date);
+comparison = new Date(a.date_c || a.date) - new Date(b.date_c || b.date);
           break;
         case "project":
-          const projectA = getProjectById(a.projectId)?.name || "";
-          const projectB = getProjectById(b.projectId)?.name || "";
+const projectA = getProjectById(a.project_id_c?.Id || a.project_id_c || a.projectId)?.Name || "";
+          const projectB = getProjectById(b.project_id_c?.Id || b.project_id_c || b.projectId)?.Name || "";
           comparison = projectA.localeCompare(projectB);
           break;
         case "duration":
@@ -158,13 +164,14 @@ const filteredAndSortedEntries = useMemo(() => {
 
   // Calculate summary statistics
   const summaryStats = useMemo(() => {
-    const totalHours = filteredAndSortedEntries.reduce((sum, entry) => sum + entry.duration, 0);
+const totalHours = filteredAndSortedEntries.reduce((sum, entry) => sum + (entry.duration_c || entry.duration || 0), 0);
     const totalEntries = filteredAndSortedEntries.length;
     const projectBreakdown = {};
     
-    filteredAndSortedEntries.forEach(entry => {
-      const project = getProjectById(entry.projectId);
-      const projectName = project?.name || "Unknown";
+filteredAndSortedEntries.forEach(entry => {
+      const project = getProjectById(entry.project_id_c?.Id || entry.project_id_c || entry.projectId);
+      const projectName = project?.Name || "Unknown";
+      const entryHours = entry.duration_c || entry.duration || 0;
       projectBreakdown[projectName] = (projectBreakdown[projectName] || 0) + entry.duration;
     });
 
@@ -279,14 +286,14 @@ const filteredAndSortedEntries = useMemo(() => {
   };
 
   const renderCalendarView = () => {
-    const calendarEntries = filteredAndSortedEntries.filter(entry => {
-      const entryDate = new Date(entry.date);
+const calendarEntries = filteredAndSortedEntries.filter(entry => {
+      const entryDate = new Date(entry.date_c || entry.date);
       return entryDate.getMonth() === calendarDate.getMonth() && 
              entryDate.getFullYear() === calendarDate.getFullYear();
     });
 
     const groupedByDate = calendarEntries.reduce((acc, entry) => {
-      const date = entry.date;
+      const date = entry.date_c || entry.date;
       if (!acc[date]) acc[date] = [];
       acc[date].push(entry);
       return acc;
@@ -337,8 +344,8 @@ const filteredAndSortedEntries = useMemo(() => {
           ))}
           {days.map(day => {
             const dateStr = `${calendarDate.getFullYear()}-${String(calendarDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            const dayEntries = groupedByDate[dateStr] || [];
-            const totalHours = dayEntries.reduce((sum, entry) => sum + entry.duration, 0);
+const dayEntries = groupedByDate[dateStr] || [];
+            const totalHours = dayEntries.reduce((sum, entry) => sum + (entry.duration_c || entry.duration || 0), 0);
 
             return (
               <div key={day} className="bg-white p-2 min-h-24 border-r border-b border-gray-100">
@@ -350,21 +357,24 @@ const filteredAndSortedEntries = useMemo(() => {
                 )}
                 <div className="space-y-1">
                   {dayEntries.slice(0, 2).map(entry => {
-                    const project = getProjectById(entry.projectId);
+const project = getProjectById(entry.project_id_c?.Id || entry.project_id_c || entry.projectId);
+                    const duration = entry.duration_c || entry.duration || 0;
+                    const description = entry.description_c || entry.description || '';
+                    
                     return (
                       <div
                         key={entry.Id}
                         className="text-xs p-1 rounded bg-blue-50 text-blue-700 cursor-pointer hover:bg-blue-100"
                         onClick={() => openEditModal(entry)}
-title={`${project?.name || 'Unknown Project'} - ${entry.duration}h\n${entry.description || 'No description'}`}
+                        title={`${project?.Name || 'Unknown Project'} - ${duration}h\n${description || 'No description'}`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="truncate text-xs font-medium">{project?.name || 'Unknown'}</span>
-                          <span className="text-xs font-bold ml-1">{entry.duration}h</span>
+                          <span className="truncate text-xs font-medium">{project?.Name || 'Unknown'}</span>
+                          <span className="text-xs font-bold ml-1">{duration}h</span>
                         </div>
-                        {entry.description && (
+                        {description && (
                           <div className="text-xs text-blue-600 truncate mt-0.5 opacity-75">
-                            {entry.description}
+                            {description}
                           </div>
                         )}
                       </div>

@@ -17,11 +17,11 @@ const TimeEntryForm = ({ timeEntry, projects, onSubmit, onCancel }) => {
 useEffect(() => {
     if (timeEntry) {
       setFormData({
-projectId: timeEntry.project_id_c || timeEntry.projectId || "",
+projectId: timeEntry.project_id_c?.Id || timeEntry.project_id_c || timeEntry.projectId || "",
         description: timeEntry.description_c || timeEntry.description || "",
         date: timeEntry.date_c || timeEntry.date || "",
         duration: (timeEntry.duration_c || timeEntry.duration)?.toString() || "",
-        taskId: timeEntry.task_id_c || timeEntry.taskId || ""
+        taskId: timeEntry.task_id_c?.Id || timeEntry.task_id_c || timeEntry.taskId || ""
       });
     } else {
       const today = new Date().toISOString().split('T')[0];
@@ -69,7 +69,8 @@ projectId: timeEntry.project_id_c || timeEntry.projectId || "",
       onSubmit({
         ...formData,
 project_id_c: parseInt(formData.projectId),
-        duration_c: parseFloat(formData.duration)
+        duration_c: parseFloat(formData.duration),
+        task_id_c: formData.taskId ? parseInt(formData.taskId) : null
       });
     }
   };
@@ -152,7 +153,7 @@ project_id_c: parseInt(formData.projectId),
           <option value="">Select a project</option>
           {projects.map((project) => (
 <option key={project.Id} value={project.Id}>
-              {project.Name || project.name}
+              {project.Name || project.name_c || project.name}
             </option>
           ))}
         </select>

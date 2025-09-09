@@ -190,8 +190,8 @@ class TimeEntryService {
       
       // Only include updateable fields
       const params = {
-        records: [{
-          Name: timeEntryData.Name || "Time Entry",
+records: [{
+          Name: timeEntryData.Name || timeEntryData.description || "Time Entry",
           Tags: timeEntryData.Tags || "",
           description_c: timeEntryData.description_c || timeEntryData.description || "",
           date_c: timeEntryData.date_c || timeEntryData.date || new Date().toISOString().split('T')[0],
@@ -397,9 +397,9 @@ class TimeEntryService {
 
     const csvHeaders = ['Date', 'Project', 'Description', 'Duration (hours)', 'Created At'];
     const csvRows = entries.map(entry => [
-      entry.date_c,
-      projectMap[entry.project_id_c?.Id || entry.project_id_c] || 'Unknown Project',
-      `"${(entry.description_c || '').replace(/"/g, '""')}"`,
+entry.date_c || entry.date,
+      projectMap[entry.project_id_c?.Id || entry.project_id_c || entry.projectId] || 'Unknown Project',
+      `"${(entry.description_c || entry.description || '').replace(/"/g, '""')}"`,
       entry.duration_c,
       entry.created_at_c
     ]);
@@ -540,8 +540,9 @@ class TimeEntryService {
     try {
       const entries = await this.getAll();
       
-      const summary = entries.reduce((acc, entry) => {
-        const projectId = entry.project_id_c?.Id || entry.project_id_c;
+const summary = entries.reduce((acc, entry) => {
+        const projectId = entry.project_id_c?.Id || entry.project_id_c || entry.projectId;
+        const duration = entry.duration_c || entry.duration || 0;
         if (!acc[projectId]) {
           acc[projectId] = {
             projectId,

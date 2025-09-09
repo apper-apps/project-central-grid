@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import taskService from "@/services/api/taskService";
-import clientService from "@/services/api/clientService";
-import projectService from "@/services/api/projectService";
-import { getAll } from "@/services/api/teamMemberService";
 import ApperIcon from "@/components/ApperIcon";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
 import StatCard from "@/components/molecules/StatCard";
 import TodaysTasks from "@/components/molecules/TodaysTasks";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import Tasks from "@/components/pages/Tasks";
-import Projects from "@/components/pages/Projects";
 import Card from "@/components/atoms/Card";
+import Projects from "@/components/pages/Projects";
+import Tasks from "@/components/pages/Tasks";
+import projectService from "@/services/api/projectService";
+import taskService from "@/services/api/taskService";
+import clientService from "@/services/api/clientService";
+import { getAll } from "@/services/api/teamMemberService";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const loadDashboardData = async () => {
+const loadDashboardData = async () => {
     try {
       setLoading(true);
       setError("");
@@ -37,20 +37,20 @@ const [loading, setLoading] = useState(true);
         taskService.getAll()
       ]);
       
-      // Calculate metrics
-const activeClients = clients.filter(client => (client.status_c || client.status) === "Active").length;
+      // Calculate metrics using database field names
+      const activeClients = clients.filter(client => client.status_c === "Active").length;
       const activeProjects = projects.filter(project => 
-        (project.status_c || project.status) === "In Progress" || (project.status_c || project.status) === "Planning"
+        project.status_c === "In Progress" || project.status_c === "Planning"
       ).length;
       
       const today = new Date().toISOString().split('T')[0];
       const tasksDueToday = tasks.filter(task => 
-        !(task.completed_c || task.completed) && (task.due_date_c || task.dueDate) === today
+        !task.completed_c && task.due_date_c === today
       ).length;
       
       const overdueTasks = tasks.filter(task => {
-        if ((task.completed_c || task.completed) || !(task.due_date_c || task.dueDate)) return false;
-        return new Date(task.due_date_c || task.dueDate) < new Date(today);
+        if (task.completed_c || !task.due_date_c) return false;
+        return new Date(task.due_date_c) < new Date(today);
       }).length;
       
       setStats({
@@ -69,7 +69,7 @@ const activeClients = clients.filter(client => (client.status_c || client.status
     }
   };
 
-useEffect(() => {
+  useEffect(() => {
     loadDashboardData();
   }, []);
 
@@ -179,36 +179,11 @@ const formatDate = (dateString) => {
             </div>
           ) : (
 <div className="space-y-4 max-h-80 overflow-y-auto">
-              {[]
-                .filter(activity => activity.type === 'milestone')
-                .slice(0, 4)
-                .map((milestone) => (
-<div 
-                    key={milestone.id} 
-                    className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
-                    onClick={() => navigate(`/projects/${milestone.projectId || milestone.id}`)}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <h4 className="font-medium text-gray-900 text-sm mb-1">{milestone.title}</h4>
-                        <p className="text-xs text-gray-600 mb-2">{milestone.subtitle}</p>
-                        <div className="flex items-center gap-2">
-                          <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full font-medium">
-                            In Progress
-                          </span>
-                          <span className="text-xs text-gray-500">{formatDate(milestone.date)}</span>
-                        </div>
-                      </div>
-                      <ApperIcon name="ChevronRight" size={16} className="text-gray-400 mt-1" />
-                    </div>
-                  </div>
-                ))}
-{[].filter(activity => activity.type === 'milestone').length === 0 && (
-                <div className="text-center py-6 text-gray-500">
-                  <ApperIcon name="Target" size={32} className="mx-auto mb-2 text-gray-300" />
-                  <p className="text-sm">No milestones to show</p>
-                </div>
-              )}
+              <div className="text-center py-6 text-gray-500">
+                <ApperIcon name="Target" size={32} className="mx-auto mb-2 text-gray-300" />
+                <p className="text-sm">No upcoming milestones</p>
+                <p className="text-xs mt-1">Milestones will appear here as they approach their due dates</p>
+              </div>
             </div>
           )}
         </Card>
@@ -239,44 +214,11 @@ const formatDate = (dateString) => {
             </div>
           ) : (
 <div className="space-y-4 max-h-80 overflow-y-auto">
-              {[]
-                .filter(activity => activity.type === 'project')
-                .slice(0, 4)
-                .map((project) => (
-<div 
-                    key={project.id} 
-                    className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
-                    onClick={() => navigate(`/projects/${project.id}`)}
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1">
-                        <h4 className="font-medium text-gray-900 text-sm mb-1">{project.title}</h4>
-                        <p className="text-xs text-gray-600 mb-2">{project.subtitle}</p>
-                      </div>
-                      <ApperIcon name="ChevronRight" size={16} className="text-gray-400 mt-1" />
-                    </div>
-                    <div className="mb-2">
-                      <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
-                        <span>Progress</span>
-                        <span>75%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-1.5">
-                        <div className="bg-green-500 h-1.5 rounded-full" style={{ width: '75%' }}></div>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
-                        Active
-                      </span>
-                      <span className="text-xs text-gray-500">{formatDate(project.date)}</span>
-                    </div>
-                  </div>
-                ))}
-{[].filter(activity => activity.type === 'project').length === 0 && (
-                <div className="text-center py-6 text-gray-500">
-                  <ApperIcon name="Briefcase" size={32} className="mx-auto mb-2 text-gray-300" />
-                  <p className="text-sm">No projects to show</p>
-                </div>
+              <div className="text-center py-6 text-gray-500">
+                <ApperIcon name="Briefcase" size={32} className="mx-auto mb-2 text-gray-300" />
+                <p className="text-sm">Recent project activity</p>
+                <p className="text-xs mt-1">Project updates and progress will appear here</p>
+              </div>
               )}
             </div>
           )}
@@ -305,38 +247,13 @@ const formatDate = (dateString) => {
                 </div>
               ))}
             </div>
-          ) : (
-<div className="space-y-3 max-h-80 overflow-y-auto">
-              {[]
-                .filter(activity => activity.type === 'task')
-                .slice(0, 5)
-                .map((task) => (
-<div 
-                    key={task.id} 
-                    className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
-                    onClick={() => navigate('/tasks')}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="w-4 h-4 rounded border-2 border-gray-300 flex-shrink-0 mt-0.5"></div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-gray-900 text-sm mb-1 truncate">{task.title}</h4>
-                        <p className="text-xs text-gray-600 mb-2 truncate">{task.subtitle}</p>
-                        <div className="flex items-center justify-between">
-                          <span className="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full font-medium">
-                            High Priority
-                          </span>
-                          <span className="text-xs text-gray-500">{formatDate(task.date)}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-{[].filter(activity => activity.type === 'task').length === 0 && (
-                <div className="text-center py-6 text-gray-500">
-                  <ApperIcon name="CheckSquare" size={32} className="mx-auto mb-2 text-gray-300" />
-                  <p className="text-sm">No tasks to show</p>
-                </div>
-              )}
+) : (
+            <div className="space-y-3 max-h-80 overflow-y-auto">
+              <div className="text-center py-6 text-gray-500">
+                <ApperIcon name="CheckSquare" size={32} className="mx-auto mb-2 text-gray-300" />
+                <p className="text-sm">Recent task activity</p>
+                <p className="text-xs mt-1">Task completions and updates will appear here</p>
+              </div>
             </div>
           )}
         </Card>
