@@ -31,44 +31,44 @@ switch (status) {
               className="font-semibold text-gray-900 hover:text-blue-600 cursor-pointer transition-colors truncate"
 onClick={() => navigate(`/projects/${project.Id}`)}
             >
-              {project.name}
+{project.Name}
             </h3>
-<span className={`px-2 py-1 rounded-full text-xs font-medium border flex-shrink-0 ${getStatusColor(project.status)}`}>
-              {project.status}
+<span className={`px-2 py-1 rounded-full text-xs font-medium border flex-shrink-0 ${getStatusColor(project.status_c)}`}>
+              {project.status_c || 'Planning'}
             </span>
           </div>
           
           {client && (
             <div className="flex items-center gap-1 mb-2">
               <ApperIcon name="User" size={14} className="text-gray-500" />
-              <span className="text-sm text-gray-600 truncate">{client.name}</span>
+<span className="text-sm text-gray-600 truncate">{client?.Name || 'No Client'}</span>
             </div>
           )}
           
           {project.description && (
-            <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-              {project.description}
+<p className="text-sm text-gray-600 mb-3 line-clamp-2">
+              {project.description_c}
             </p>
           )}
-{project.deadline && (
+{project.deadline_c && (
             <div className="flex items-center gap-1 mb-2">
               <ApperIcon name="Calendar" size={14} className="text-gray-400" />
-              <span className="text-xs text-gray-600">Due: {formatDate(project.deadline)}</span>
+              <span className="text-xs text-gray-600">Due: {formatDate(project.deadline_c)}</span>
             </div>
           )}
 
           {/* Milestone Progress */}
-          {project.milestones && project.milestones.length > 0 && (
+{project.milestones && project.milestones.length > 0 && (
             <div className="mb-3">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs text-gray-500">Milestones</span>
                 <span className="text-xs font-medium text-gray-700">
-{project.milestones?.filter(m => m.is_completed_c).length || 0}/{project.milestones?.length || 0}
+                  {project.milestones?.filter(m => m.is_completed_c).length || 0}/{project.milestones?.length || 0}
                 </span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-1.5">
                 <div 
-className="h-1.5 rounded-full transition-all duration-300"
+                  className="h-1.5 rounded-full transition-all duration-300"
                   style={{
                     backgroundColor: '#4A90E2',
                     width: `${project.milestones?.length > 0 ? 
@@ -80,9 +80,9 @@ className="h-1.5 rounded-full transition-all duration-300"
             </div>
           )}
 
-          {project.deliverables && (
+{project.deliverables_c && (
             <p className="text-xs text-gray-500 line-clamp-1">
-              <span className="font-medium">Deliverables:</span> {project.deliverables}
+              <span className="font-medium">Deliverables:</span> {project.deliverables_c}
             </p>
           )}
         </div>
@@ -90,7 +90,7 @@ className="h-1.5 rounded-full transition-all duration-300"
           <Button 
             variant="ghost" 
             size="sm"
-            onClick={() => onEdit(project)}
+onClick={() => onEdit(project)}
             className="p-2"
           >
             <ApperIcon name="Edit2" size={16} />
@@ -99,8 +99,8 @@ className="h-1.5 rounded-full transition-all duration-300"
             variant="ghost" 
 size="sm"
             onClick={(e) => {
-              e.stopPropagation();
-onDelete(project.Id);
+e.stopPropagation();
+              onDelete(project.Id);
             }}
             className="p-2 hover:text-red-600"
           >

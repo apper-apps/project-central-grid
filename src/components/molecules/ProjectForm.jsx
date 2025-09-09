@@ -4,13 +4,13 @@ import Button from "@/components/atoms/Button";
 
 const ProjectForm = ({ project, clients, onSubmit, onCancel }) => {
 const [formData, setFormData] = useState({
-    name: "",
-    clientId: "",
-    description: "",
-    status: "Planning",
+    Name: "",
+    client_id_c: "",
+    description_c: "",
+    status_c: "Planning",
     startDate: "",
-    deadline: "",
-    deliverables: ""
+    deadline_c: "",
+    deliverables_c: ""
   });
 
   const [errors, setErrors] = useState({});
@@ -18,13 +18,13 @@ const [formData, setFormData] = useState({
 useEffect(() => {
     if (project) {
       setFormData({
-        name: project.name || "",
-        clientId: project.clientId || "",
-        description: project.description || "",
-        status: project.status || "Planning",
+        Name: project.Name || "",
+        client_id_c: project.client_id_c || "",
+        description_c: project.description_c || "",
+        status_c: project.status_c || "Planning",
         startDate: project.startDate || "",
-        deadline: project.deadline || "",
-        deliverables: project.deliverables || ""
+        deadline_c: project.deadline_c || "",
+        deliverables_c: project.deliverables_c || ""
       });
     }
   }, [project]);

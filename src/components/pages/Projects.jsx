@@ -208,12 +208,12 @@ setEditingProject(null);
 
       {/* Filter and paginate projects */}
       {(() => {
-        const filteredProjects = projects.filter(project => {
+const filteredProjects = projects.filter(project => {
           if (!searchTerm) return true;
-          const client = getClientById(project.clientId);
-          return project.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            project.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            client?.name?.toLowerCase().includes(searchTerm.toLowerCase());
+          const client = getClientById(project.client_id_c);
+          return project.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            project.description_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            client?.Name?.toLowerCase().includes(searchTerm.toLowerCase());
         });
 
         // Pagination calculations
@@ -239,10 +239,10 @@ setEditingProject(null);
             {viewMode === "grid" ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {paginatedProjects.map((project) => (
-                  <ProjectCard
+<ProjectCard
                     key={project.Id}
                     project={project}
-                    client={getClientById(project.clientId)}
+                    client={getClientById(project.client_id_c)}
                     onEdit={openEditModal}
                     onDelete={handleDeleteProject}
                   />
@@ -266,14 +266,14 @@ setEditingProject(null);
                       {paginatedProjects.map((project) => {
                         const client = getClientById(project.clientId);
 return (
-                          <tr key={project.Id} className="hover:bg-gray-50">
+<tr key={project.Id} className="hover:bg-gray-50">
                             <td className="px-6 py-4">
                               <div>
                                 <div 
                                   className="text-sm font-medium text-gray-900 hover:text-blue-600 cursor-pointer"
                                   onClick={() => navigate(`/projects/${project.Id}`)}
                                 >
-                                  {project.name}
+                                  {project.Name}
                                 </div>
                                 {project.description && (
                                   <div className="text-sm text-gray-500 max-w-xs truncate">
@@ -287,12 +287,12 @@ return (
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
 <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                (project.status_c || project.status) === 'In Progress' ? 'bg-green-100 text-green-800' :
-                                (project.status_c || project.status) === 'On Hold' ? 'bg-yellow-100 text-yellow-800' :
-                                (project.status_c || project.status) === 'Completed' ? 'bg-blue-100 text-blue-800' :
+                                project.status_c === 'In Progress' ? 'bg-green-100 text-green-800' :
+                                project.status_c === 'On Hold' ? 'bg-yellow-100 text-yellow-800' :
+                                project.status_c === 'Completed' ? 'bg-blue-100 text-blue-800' :
                                 'bg-gray-100 text-gray-800'
                               }`}>
-                                {project.status_c || project.status}
+                                {project.status_c || 'Planning'}
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
@@ -300,7 +300,7 @@ return (
                                 <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
                                   <div 
                                     className="bg-blue-600 h-2 rounded-full" 
-                                    style={{ width: `${project.progress || 0}%` }}
+style={{ width: `${project.progress || 0}%` }}
                                   />
                                 </div>
                                 <span className="text-sm text-gray-600">{project.progress || 0}%</span>
@@ -318,7 +318,7 @@ return (
                                   <ApperIcon name="Edit2" size={16} />
                                 </button>
                                 <button
-                                  onClick={() => handleDeleteProject(project.Id)}
+onClick={() => handleDeleteProject(project.Id)}
                                   className="text-red-600 hover:text-red-900"
                                 >
                                   <ApperIcon name="Trash2" size={16} />
