@@ -3,6 +3,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ApexCharts Error Prevention Styles */
+.apexcharts-canvas {
+  font-family: inherit;
+}
+
+.apexcharts-tooltip {
+  font-family: inherit;
+}
+
+.chart-loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.chart-error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: #666;
+}
+
 @layer base {
   :root {
     --color-background: #FAFAFA;
