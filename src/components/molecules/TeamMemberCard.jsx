@@ -91,19 +91,19 @@ const statusColors = {
         <div className="mb-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-gray-700">Active Projects</span>
-            <span className="text-sm text-gray-600">{member.currentProjects.length}</span>
+<span className="text-sm text-gray-600">{member.currentProjects?.length || 0}</span>
           </div>
-          {member.currentProjects.length > 0 ? (
+          {(member.currentProjects?.length || 0) > 0 ? (
             <div className="space-y-1">
-              {member.currentProjects.slice(0, 2).map((project, index) => (
+              {(member.currentProjects || []).slice(0, 2).map((project, index) => (
                 <div key={index} className="flex items-center justify-between text-xs">
                   <span className="text-gray-600 truncate">{project.projectName}</span>
                   <span className="text-gray-500 ml-2">{project.hoursAllocated}h</span>
                 </div>
               ))}
-              {member.currentProjects.length > 2 && (
+              {(member.currentProjects?.length || 0) > 2 && (
                 <div className="text-xs text-gray-500">
-                  +{member.currentProjects.length - 2} more projects
+                  +{(member.currentProjects?.length || 0) - 2} more projects
                 </div>
               )}
             </div>
