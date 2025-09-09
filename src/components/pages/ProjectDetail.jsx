@@ -103,9 +103,9 @@ setTasks(tasksData);
       setCalendarEvents(eventsData || []);
       setTeamMembers(teamData || []);
 setActivities(activitiesData || []);
-      setTimeEntries(timeEntriesData || []);
+setTimeEntries(timeEntriesData || []);
       // Find the client for this project
-      const projectClient = clientsData.find(c => c.Id === projectData.clientId);
+      const projectClient = clientsData.find(c => c.Id === projectData.client_id_c?.Id || projectData.client_id_c);
       setClient(projectClient);
     } catch (err) {
       console.error("Failed to load project data:", err);
