@@ -277,6 +277,256 @@ class ProjectService {
     }
   }
 
+// Get milestones for a specific project
+  async getMilestonesByProjectId(projectId) {
+    try {
+      const apperClient = this.getApperClient();
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "Tags" } },
+          { field: { Name: "title_c" } },
+          { field: { Name: "description_c" } },
+          { field: { Name: "due_date_c" } },
+          { field: { Name: "is_completed_c" } },
+          { field: { Name: "completed_date_c" } },
+          { field: { Name: "created_at_c" } },
+          { field: { Name: "start_date_c" } },
+          { field: { Name: "project_id_c" } }
+        ],
+        where: [
+          {
+            FieldName: "project_id_c",
+            Operator: "EqualTo",
+            Values: [parseInt(projectId)]
+          }
+        ]
+      };
+
+      const response = await apperClient.fetchRecords('milestone_c', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        return [];
+      }
+
+      return response.data || [];
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching milestones:", error?.response?.data?.message);
+      } else {
+        console.error(error);
+      }
+      return [];
+    }
+  }
+
+  // Create milestone for a project
+  async createMilestone(projectId, milestoneData) {
+    try {
+      const apperClient = this.getApperClient();
+      
+      // Only include updateable fields
+      const params = {
+        records: [{
+          Name: milestoneData.Name || milestoneData.name || milestoneData.title_c || milestoneData.title,
+          Tags: milestoneData.Tags || "",
+          title_c: milestoneData.title_c || milestoneData.title || "",
+          description_c: milestoneData.description_c || milestoneData.description || "",
+          due_date_c: milestoneData.due_date_c || milestoneData.dueDate || milestoneData.deadline || "",
+          is_completed_c: milestoneData.is_completed_c !== undefined ? milestoneData.is_completed_c : (milestoneData.isCompleted !== undefined ? milestoneData.isCompleted : false),
+          completed_date_c: milestoneData.completed_date_c || milestoneData.completedDate || "",
+          created_at_c: new Date().toISOString(),
+          start_date_c: milestoneData.start_date_c || milestoneData.startDate || "",
+          project_id_c: parseInt(projectId)
+        }]
+      };
+
+      const response = await apperClient.createRecord('milestone_c', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        return null;
+      }
+
+      if (response.results) {
+        const successfulRecords = response.results.filter(result => result.success);
+        const failedRecords = response.results.filter(result => !result.success);
+        
+        if (failedRecords.length > 0) {
+          console.error(`Failed to create milestones ${failedRecords.length} records:${JSON.stringify(failedRecords)}`);
+          failedRecords.forEach(record => {
+            record.errors?.forEach(error => {
+              toast.error(`${error.fieldLabel}: ${error}`);
+            });
+            if (record.message) toast.error(record.message);
+          });
+        }
+        
+        return successfulRecords.length > 0 ? successfulRecords[0].data : null;
+      }
+      
+      return null;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error creating milestone:", error?.response?.data?.message);
+      } else {
+        console.error(error);
+      }
+      return null;
+    }
+  }
+
+  // Update milestone
+  async updateMilestone(milestoneId, milestoneData) {
+    try {
+      const apperClient = this.getApperClient();
+      
+      // Only include updateable fields
+      const updateData = {
+        Id: parseInt(milestoneId)
+      };
+      
+      if (milestoneData.Name !== undefined) updateData.Name = milestoneData.Name;
+      if (milestoneData.name !== undefined) updateData.Name = milestoneData.name;
+      if (milestoneData.Tags !== undefined) updateData.Tags = milestoneData.Tags;
+      if (milestoneData.title_c !== undefined) updateData.title_c = milestoneData.title_c;
+      if (milestoneData.title !== undefined) updateData.title_c = milestoneData.title;
+      if (milestoneData.description_c !== undefined) updateData.description_c = milestoneData.description_c;
+      if (milestoneData.description !== undefined) updateData.description_c = milestoneData.description;
+      if (milestoneData.due_date_c !== undefined) updateData.due_date_c = milestoneData.due_date_c;
+      if (milestoneData.dueDate !== undefined) updateData.due_date_c = milestoneData.dueDate;
+      if (milestoneData.is_completed_c !== undefined) updateData.is_completed_c = milestoneData.is_completed_c;
+      if (milestoneData.isCompleted !== undefined) updateData.is_completed_c = milestoneData.isCompleted;
+      if (milestoneData.completed_date_c !== undefined) updateData.completed_date_c = milestoneData.completed_date_c;
+      if (milestoneData.completedDate !== undefined) updateData.completed_date_c = milestoneData.completedDate;
+      if (milestoneData.start_date_c !== undefined) updateData.start_date_c = milestoneData.start_date_c;
+      if (milestoneData.startDate !== undefined) updateData.start_date_c = milestoneData.startDate;
+      
+      const params = {
+        records: [updateData]
+      };
+
+      const response = await apperClient.updateRecord('milestone_c', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        return null;
+      }
+
+      if (response.results) {
+        const successfulUpdates = response.results.filter(result => result.success);
+        const failedUpdates = response.results.filter(result => !result.success);
+        
+        if (failedUpdates.length > 0) {
+          console.error(`Failed to update milestones ${failedUpdates.length} records:${JSON.stringify(failedUpdates)}`);
+          failedUpdates.forEach(record => {
+            record.errors?.forEach(error => {
+              toast.error(`${error.fieldLabel}: ${error}`);
+            });
+            if (record.message) toast.error(record.message);
+          });
+        }
+        
+        return successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
+      }
+      
+      return null;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error updating milestone:", error?.response?.data?.message);
+      } else {
+        console.error(error);
+      }
+      return null;
+    }
+  }
+
+  // Delete milestone
+  async deleteMilestone(milestoneId) {
+    try {
+      const apperClient = this.getApperClient();
+      const params = {
+        RecordIds: [parseInt(milestoneId)]
+      };
+
+      const response = await apperClient.deleteRecord('milestone_c', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        return false;
+      }
+
+      if (response.results) {
+        const successfulDeletions = response.results.filter(result => result.success);
+        const failedDeletions = response.results.filter(result => !result.success);
+        
+        if (failedDeletions.length > 0) {
+          console.error(`Failed to delete milestones ${failedDeletions.length} records:${JSON.stringify(failedDeletions)}`);
+          failedDeletions.forEach(record => {
+            if (record.message) toast.error(record.message);
+          });
+        }
+        
+        return successfulDeletions.length > 0;
+      }
+      
+      return false;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error deleting milestone:", error?.response?.data?.message);
+      } else {
+        console.error(error);
+      }
+      return false;
+    }
+  }
+
+  // Placeholder methods for wiki documents and calendar events
+  // These entities don't exist in the database schema, so they return empty arrays/null
+  async getWikiDocuments(projectId) {
+    console.warn("Wiki documents not implemented - no database table available");
+    return [];
+  }
+
+  async getCalendarEvents(projectId) {
+    console.warn("Calendar events not implemented - no database table available");
+    return [];
+  }
+
+  async createWikiDocument(projectId, docData) {
+    console.warn("Wiki document creation not implemented - no database table available");
+    return null;
+  }
+
+  async updateWikiDocument(docId, docData) {
+    console.warn("Wiki document update not implemented - no database table available");
+    return null;
+  }
+
+  async deleteWikiDocument(docId) {
+    console.warn("Wiki document deletion not implemented - no database table available");
+    return false;
+  }
+
+  async createCalendarEvent(projectId, eventData) {
+    console.warn("Calendar event creation not implemented - no database table available");
+    return null;
+  }
+
+  async updateCalendarEvent(eventId, eventData) {
+    console.warn("Calendar event update not implemented - no database table available");
+    return null;
+  }
+
+  async deleteCalendarEvent(eventId) {
+    console.warn("Calendar event deletion not implemented - no database table available");
+    return false;
+  }
 }
 
 export default new ProjectService();
