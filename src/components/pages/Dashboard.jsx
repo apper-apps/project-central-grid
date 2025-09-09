@@ -219,9 +219,7 @@ const formatDate = (dateString) => {
                 <p className="text-sm">Recent project activity</p>
                 <p className="text-xs mt-1">Project updates and progress will appear here</p>
               </div>
-              )}
             </div>
-          )}
         </Card>
 
         {/* My Tasks */}
@@ -245,9 +243,9 @@ const formatDate = (dateString) => {
                   <div className="h-4 bg-gray-200 rounded mb-2"></div>
                   <div className="h-3 bg-gray-200 rounded w-2/3"></div>
                 </div>
-              ))}
+))}
             </div>
-) : (
+          ) : (
             <div className="space-y-3 max-h-80 overflow-y-auto">
               <div className="text-center py-6 text-gray-500">
                 <ApperIcon name="CheckSquare" size={32} className="mx-auto mb-2 text-gray-300" />

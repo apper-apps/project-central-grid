@@ -123,14 +123,14 @@ if (projectFilter) {
       );
     }
 
-    if (search) {
+if (projectFilter) {
       filtered = filtered.filter(entry => entry.projectId === parseInt(projectFilter));
     }
 
     // Apply search filter
     if (searchTerm) {
-      const search = searchTerm.toLowerCase();
-filtered = filtered.filter(entry => 
+const search = searchTerm.toLowerCase();
+      filtered = filtered.filter(entry =>
         (entry.description_c || entry.description || '').toLowerCase().includes(search) ||
         getProjectById(entry.project_id_c?.Id || entry.project_id_c || entry.projectId)?.Name?.toLowerCase().includes(search)
       );
