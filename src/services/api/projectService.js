@@ -42,13 +42,18 @@ class ProjectService {
         fields: [
           { field: { Name: "Name" } },
           { field: { Name: "Tags" } },
-          { field: { Name: "description_c" } },
+{ field: { Name: "description_c" } },
           { field: { Name: "status_c" } },
           { field: { Name: "deadline_c" } },
           { field: { Name: "deliverables_c" } },
           { field: { Name: "created_at_c" } },
           { field: { Name: "chat_enabled_c" } },
-          { field: { Name: "client_id_c" } }
+          { field: { Name: "client_id_c" } },
+          { field: { Name: "Owner" } },
+          { field: { Name: "CreatedOn" } },
+          { field: { Name: "CreatedBy" } },
+          { field: { Name: "ModifiedOn" } },
+          { field: { Name: "ModifiedBy" } }
         ]
       };
 
@@ -85,7 +90,7 @@ class ProjectService {
       const apperClient = this.getApperClient();
       const params = {
         fields: [
-          { field: { Name: "Name" } },
+{ field: { Name: "Name" } },
           { field: { Name: "Tags" } },
           { field: { Name: "description_c" } },
           { field: { Name: "status_c" } },
@@ -93,6 +98,12 @@ class ProjectService {
           { field: { Name: "deliverables_c" } },
           { field: { Name: "created_at_c" } },
           { field: { Name: "chat_enabled_c" } },
+          { field: { Name: "client_id_c" } },
+          { field: { Name: "Owner" } },
+          { field: { Name: "CreatedOn" } },
+          { field: { Name: "CreatedBy" } },
+{ field: { Name: "ModifiedOn" } },
+          { field: { Name: "ModifiedBy" } },
           { field: { Name: "client_id_c" } }
         ]
       };
@@ -122,8 +133,8 @@ class ProjectService {
       // Only include updateable fields
       const params = {
         records: [{
-          Name: projectData.Name || projectData.name,
-          Tags: projectData.Tags || "",
+Name: projectData.Name || projectData.name,
+          Tags: projectData.Tags || projectData.tags || "",
           description_c: projectData.description_c || projectData.description || "",
           status_c: projectData.status_c || projectData.status || "Planning",
           deadline_c: projectData.deadline_c || projectData.deadline || "",
@@ -178,11 +189,12 @@ class ProjectService {
       // Only include updateable fields
       const updateData = {
         Id: parseInt(id)
-      };
+};
       
       if (projectData.Name !== undefined) updateData.Name = projectData.Name;
       if (projectData.name !== undefined) updateData.Name = projectData.name;
       if (projectData.Tags !== undefined) updateData.Tags = projectData.Tags;
+      if (projectData.tags !== undefined) updateData.Tags = projectData.tags;
       if (projectData.description_c !== undefined) updateData.description_c = projectData.description_c;
       if (projectData.description !== undefined) updateData.description_c = projectData.description;
       if (projectData.status_c !== undefined) updateData.status_c = projectData.status_c;
