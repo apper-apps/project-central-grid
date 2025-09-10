@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "@/components/atoms/Input";
 import Button from "@/components/atoms/Button";
 
@@ -31,28 +31,24 @@ useEffect(() => {
 
 const validateForm = () => {
     const newErrors = {};
-    
-    if (!formData.name.trim()) {
-      newErrors.name = "Project name is required";
+if (!formData.Name.trim()) {
+      newErrors.Name = "Project name is required";
     }
     
-    if (!formData.clientId) {
-      newErrors.clientId = "Please select a client";
+    if (!formData.client_id_c) {
+      newErrors.client_id_c = "Please select a client";
     }
     
-    if (!formData.description.trim()) {
-      newErrors.description = "Description is required";
+if (!formData.description_c.trim()) {
+      newErrors.description_c = "Description is required";
     }
     
-if (!formData.startDate) {
-      newErrors.startDate = "Start date is required";
-    }
-    if (!formData.deadline) {
-      newErrors.deadline = "Deadline is required";
+    if (!formData.deadline_c) {
+      newErrors.deadline_c = "Deadline is required";
     }
     
-    if (!formData.deliverables.trim()) {
-      newErrors.deliverables = "Deliverables are required";
+    if (!formData.deliverables_c.trim()) {
+      newErrors.deliverables_c = "Deliverables are required";
     }
     
     setErrors(newErrors);
@@ -84,11 +80,11 @@ if (!formData.startDate) {
   return (
 <form onSubmit={handleSubmit} className="space-y-4">
       <Input
-        label="Project Name"
-        name="name"
-        value={formData.name}
+label="Project Name"
+        name="Name"
+        value={formData.Name}
         onChange={handleChange}
-        error={errors.name}
+        error={errors.Name}
         placeholder="Enter project name"
         required
       />
@@ -98,20 +94,20 @@ if (!formData.startDate) {
           Client *
         </label>
         <select
-          name="clientId"
-          value={formData.clientId}
+name="client_id_c"
+          value={formData.client_id_c}
           onChange={handleChange}
           className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400"
         >
           <option value="">Select a client</option>
-          {clients.map(client => (
+{clients.map(client => (
             <option key={client.Id} value={client.Id}>
-              {client.name} - {client.company}
+              {client.Name} - {client.company_c}
             </option>
           ))}
         </select>
-        {errors.clientId && (
-          <p className="text-xs text-red-600 mt-1">{errors.clientId}</p>
+{errors.client_id_c && (
+          <p className="text-xs text-red-600 mt-1">{errors.client_id_c}</p>
         )}
       </div>
       
@@ -120,8 +116,8 @@ if (!formData.startDate) {
           Status *
         </label>
         <select
-          name="status"
-          value={formData.status}
+name="status_c"
+          value={formData.status_c}
           onChange={handleChange}
           className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400"
         >
@@ -130,44 +126,35 @@ if (!formData.startDate) {
           <option value="Completed">Completed</option>
           <option value="On Hold">On Hold</option>
         </select>
-        {errors.status && (
-          <p className="text-xs text-red-600 mt-1">{errors.status}</p>
+{errors.status_c && (
+          <p className="text-xs text-red-600 mt-1">{errors.status_c}</p>
         )}
       </div>
       
       <Input
-label="Start Date"
-        name="startDate"
+label="Deadline"
+        name="deadline_c"
         type="date"
-        value={formData.startDate}
+        value={formData.deadline_c}
         onChange={handleChange}
-        error={errors.startDate}
+        error={errors.deadline_c}
         required
-      />
-      <Input
-        label="Deadline"
-        name="deadline"
-        type="date"
-        value={formData.deadline}
-        onChange={handleChange}
-        error={errors.deadline}
-        required
-      />
+/>
       
       <div className="space-y-1">
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Description *
         </label>
         <textarea
-          name="description"
-          value={formData.description}
+          name="description_c"
+          value={formData.description_c}
           onChange={handleChange}
           rows={3}
           className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 resize-none"
           placeholder="Describe the project details..."
         />
-        {errors.description && (
-          <p className="text-xs text-red-600 mt-1">{errors.description}</p>
+        {errors.description_c && (
+          <p className="text-xs text-red-600 mt-1">{errors.description_c}</p>
         )}
       </div>
       
@@ -176,15 +163,15 @@ label="Start Date"
           Deliverables *
         </label>
         <textarea
-          name="deliverables"
-          value={formData.deliverables}
+          name="deliverables_c"
+          value={formData.deliverables_c}
           onChange={handleChange}
           rows={3}
           className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 resize-none"
           placeholder="List project deliverables and outcomes..."
         />
-        {errors.deliverables && (
-          <p className="text-xs text-red-600 mt-1">{errors.deliverables}</p>
+        {errors.deliverables_c && (
+          <p className="text-xs text-red-600 mt-1">{errors.deliverables_c}</p>
         )}
       </div>
       

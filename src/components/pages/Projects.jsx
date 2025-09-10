@@ -66,8 +66,8 @@ const [itemsPerPage, setItemsPerPage] = useState(25);
     loadData();
   }, []);
 
-  const getClientById = (clientId) => {
-return clients.find(client => client.Id === parseInt(clientId));
+const getClientById = (clientId) => {
+    return clients.find(client => client.Id === parseInt(clientId));
   };
 
   const handleCreateProject = async (projectData) => {
@@ -210,7 +210,7 @@ setEditingProject(null);
       {(() => {
 const filteredProjects = projects.filter(project => {
           if (!searchTerm) return true;
-          const client = getClientById(project.client_id_c);
+const client = getClientById(project.client_id_c?.Id || project.client_id_c);
           return project.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             project.description_c?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             client?.Name?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -242,7 +242,7 @@ const filteredProjects = projects.filter(project => {
 <ProjectCard
                     key={project.Id}
                     project={project}
-                    client={getClientById(project.client_id_c)}
+client={getClientById(project.client_id_c?.Id || project.client_id_c)}
                     onEdit={openEditModal}
                     onDelete={handleDeleteProject}
                   />
@@ -264,7 +264,7 @@ const filteredProjects = projects.filter(project => {
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {paginatedProjects.map((project) => {
-                        const client = getClientById(project.clientId);
+const client = getClientById(project.client_id_c?.Id || project.client_id_c);
 return (
 <tr key={project.Id} className="hover:bg-gray-50">
                             <td className="px-6 py-4">
@@ -283,7 +283,7 @@ return (
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              {client?.name || 'No Client'}
+{client?.Name || 'No Client'}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
 <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
