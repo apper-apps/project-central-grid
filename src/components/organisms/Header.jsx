@@ -120,16 +120,16 @@ const handleLogout = async () => {
             variant="ghost"
             size="sm"
             onClick={onMenuClick}
-            className="lg:hidden mr-3 p-2"
+className="lg:hidden mr-3 p-3 hover:bg-gray-100 rounded-md transition-colors duration-200"
           >
             <ApperIcon name="Menu" size={20} />
           </Button>
           
           {/* Desktop menu toggle - only show when sidebar is collapsed */}
-          <Button
+<Button
             variant="ghost"
             size="sm"
-            className="hidden lg:flex items-center justify-center p-2 hover:bg-gray-100"
+            className="hidden lg:flex items-center justify-center p-2 hover:bg-gray-100 rounded-md transition-colors duration-200"
             onClick={onToggleCollapse}
             style={{ display: sidebarCollapsed ? 'flex' : 'none' }}
             title="Expand sidebar"
@@ -137,16 +137,16 @@ const handleLogout = async () => {
             <ApperIcon name="Menu" size={20} />
           </Button>
 
-          <div className="lg:hidden flex items-center">
-            <div className="p-1.5 rounded-lg mr-2" style={{backgroundColor: 'rgba(74, 144, 226, 0.1)'}}>
-              <ApperIcon name="Zap" size={16} style={{color: '#4A90E2'}} />
+<div className="flex lg:hidden items-center">
+            <div className="p-2 rounded-lg mr-3" style={{backgroundColor: 'rgba(74, 144, 226, 0.1)'}}>
+              <ApperIcon name="Zap" size={18} style={{color: '#4A90E2'}} />
             </div>
-            <span className="text-lg font-bold gradient-text">Project Central</span>
+            <span className="text-lg sm:text-xl font-bold gradient-text">Project Central</span>
           </div>
         </div>
 
         {/* Global Search Bar */}
-        <div className="flex-1 max-w-xl mx-4 relative" ref={searchRef}>
+<div className="flex-1 max-w-xl mx-4 sm:mx-6 relative" ref={searchRef}>
           <div className="relative">
             <Input
               type="text"

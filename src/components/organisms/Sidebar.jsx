@@ -26,25 +26,29 @@ const navigation = [
       )}
       
       {/* Desktop Sidebar */}
-<div className={`hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 transition-all duration-300 ${
+<div className={`hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:z-40 transition-all duration-300 ease-in-out ${
         isCollapsed ? 'lg:w-16' : 'lg:w-64'
       }`}>
         <div className="flex flex-col flex-grow pt-5 pb-4 overflow-y-auto gradient-bg">
-          <div className="flex items-center flex-shrink-0 px-6">
+<div className="flex items-center justify-between flex-shrink-0 px-4 py-4">
             <div className="flex items-center">
               <div className="bg-white bg-opacity-20 p-2 rounded-lg">
                 <ApperIcon name="Zap" size={24} className="text-white" />
               </div>
-              <span className="ml-3 text-xl font-bold text-white">Project Central</span>
-</div>
-            <button
+              {!isCollapsed && (
+                <span className="ml-3 text-xl font-bold text-white transition-opacity duration-300">
+                  Project Central
+                </span>
+              )}
+            </div>
+<button
               onClick={onToggleCollapse}
-              className="hidden lg:flex items-center justify-center p-2 mx-2 mb-4 text-blue-100 hover:text-white hover:bg-blue-700 rounded-lg transition-colors"
+              className="flex items-center justify-center p-2 text-blue-100 hover:text-white hover:bg-blue-700 hover:bg-opacity-50 rounded-lg transition-colors duration-200"
               title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
               <ApperIcon 
                 name={isCollapsed ? "ChevronRight" : "ChevronLeft"} 
-                size={20} 
+                size={18} 
               />
             </button>
           </div>
@@ -64,11 +68,11 @@ isActive
                 >
                   <ApperIcon 
                     name={item.icon} 
-                    size={20} 
-className={`flex-shrink-0 ${isCollapsed ? 'lg:mr-0' : 'mr-3'}`} 
+size={20} 
+                    className={`flex-shrink-0 transition-all duration-300 ${isCollapsed ? 'lg:mr-0' : 'mr-3'}`} 
                   />
-                  <span className={`transition-opacity duration-300 ${
-                    isCollapsed ? 'lg:hidden' : 'block'
+                  <span className={`transition-all duration-300 ${
+                    isCollapsed ? 'lg:opacity-0 lg:w-0 lg:overflow-hidden' : 'opacity-100'
                   }`}>
                     {item.name}
                   </span>
@@ -80,7 +84,7 @@ className={`flex-shrink-0 ${isCollapsed ? 'lg:mr-0' : 'mr-3'}`}
       </div>
 
       {/* Mobile Sidebar */}
-<div className={`fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 lg:hidden ${
+<div className={`fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out lg:hidden ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}>
         <div className="flex flex-col h-full gradient-bg">

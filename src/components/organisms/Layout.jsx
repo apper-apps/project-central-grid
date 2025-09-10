@@ -12,7 +12,7 @@ const [sidebarOpen, setSidebarOpen] = useState(false);
 
 return (
     <TimerProvider>
-<div className="h-screen flex" style={{backgroundColor: '#FAFAFA'}}>
+<div className="h-screen flex bg-gray-50" style={{backgroundColor: '#FAFAFA'}}>
 <Sidebar 
           isOpen={sidebarOpen} 
           onClose={() => setSidebarOpen(false)}
@@ -20,8 +20,8 @@ return (
           onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
         />
         
-<div className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${
-          sidebarCollapsed ? 'lg:pl-16' : 'lg:pl-64'
+<div className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${
+          sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-64'
         }`}>
           <Header 
             onMenuClick={() => setSidebarOpen(true)}
